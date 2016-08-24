@@ -1,0 +1,16 @@
+sample rate: 16.000000 MHz
+probes: {
+ "0": "MISO", 
+ "1": "MOSI", 
+ "2": "SCLK", 
+ "3": "CS"
+}
+loading part 477/477, 100.0%, at 31.250s, 500.0M samples
+SPI commands: 30241
+100.0% @ 4.101509s
+43 empty commands (last at 0.528215s)
+1405 read commands, total 1088178 bytes
+1086781 bytes covered
+2097152 bytes of memory assumed
+ranges:
+       0h -   10953ch:   1086781 bytes
