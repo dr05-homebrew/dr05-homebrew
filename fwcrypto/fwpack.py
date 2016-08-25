@@ -11,12 +11,16 @@ permfile, flashfile, outfile = sys.argv[1:]
 pagesize = 512
 
 perm = np.memmap(permfile, dtype=np.uint8, mode='r')
-flash = np.memmap(flashfile, dtype=np.uint8, mode='r')
+
+flashlength = os.path.getsize(flashfile)
+if flashlength > 0:
+	flash = np.memmap(flashfile, shape=flashlength, dtype=np.uint8, mode='r')
+else:
+	flash = np.zeros((0,), dtype=np.uint8)
 
 checksum = flash.sum()
 
-length = len(flash)
-paddedlength = roundup(length + 4, pagesize)
+paddedlength = roundup(flashlength + 4, pagesize)
 outlength = 32 + paddedlength
 
 version = 1337
