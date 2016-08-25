@@ -4,12 +4,14 @@ import os
 import sys
 import numpy as np
 import cv2
+from fwutils import *
 
-flashfile, firmwarefile, permfile = sys.argv[1:]
+flashfile, firmwarefile = sys.argv[1:]
 
 flash = np.memmap(flashfile, dtype=np.uint8, mode='r')
 firmware = np.memmap(firmwarefile, dtype=np.uint8, mode='r')
-perm = np.memmap(permfile, shape=(256), dtype=np.uint8, mode='w+')
+perm = np.memmap("lut_encode.bin", shape=(256), dtype=np.uint8, mode='w+')
+iperm = np.memmap("lut_decode.bin", shape=(256), dtype=np.uint8, mode='w+')
 
 def heatmap(seq1, seq2):
 	length = min(len(seq1), len(seq2))
@@ -67,3 +69,4 @@ cv2.imwrite("substitution.png", (hm*255).astype(np.uint8))
 print "chosen offset", offset
 
 perm[:] = extract_permutation(hm)
+iperm[:] = invert_permutation(perm)
