@@ -35,10 +35,10 @@ year, month, day = now.year, now.month, now.day
 
 out = np.memmap(outfile, shape=outlength, dtype=np.uint8, mode='w+')
 
-out[0:32] = np.fromstring(struct.pack(">8sHHHHII8s",
+out[0:32] = np.fromstring(struct.pack(">8sHHHBBII8s",
 	"DR-05\0\0\0",
 	version, revision,
-	year, day * 100 + month,
+	year, month, day,
 	checksum,
 	outlength,
 	'\0' * 8
