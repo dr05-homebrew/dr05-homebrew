@@ -6,11 +6,11 @@ import datetime
 import numpy as np
 from fwutils import *
 
-permfile, flashfile, outfile = sys.argv[1:]
+lutfile, flashfile, outfile = sys.argv[1:]
 
 pagesize = 512
 
-perm = np.memmap(permfile, dtype=np.uint8, mode='r')
+lut_encode = np.memmap(lutfile, dtype=np.uint8, mode='r')
 
 flashlength = os.path.getsize(flashfile)
 if flashlength > 0:
@@ -39,6 +39,6 @@ out[0:32] = np.fromstring(struct.pack(">8sHHHHII8s",
 	'\0' * 8
 ), dtype=np.uint8)
 
-out[32:32+len(flash)] = perm[flash]
+out[32:32+len(flash)] = lut_encode[flash]
 out[32+len(flash):-4] = 0xff
-out[-4:] = perm[np.fromstring(struct.pack(">I", checksum), dtype=np.uint8)]
+out[-4:] = lut_encode[np.fromstring(struct.pack(">I", checksum), dtype=np.uint8)]
