@@ -14,7 +14,7 @@ length = len(flash)
 checksum = flash.sum()
 
 version, version2 = 211,44
-year, month, day = 2016, 18, 5
+year, day, month = 2016, 18, 5
 
 outlen = 32 + len(flash) + 4
 
