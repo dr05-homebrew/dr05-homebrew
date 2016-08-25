@@ -55,6 +55,7 @@ def parse_quantity(text, unit=None):
 
 def dict_select(dict, *alternatives, **kws):
 	reverse = kws.get('reverse', False)
+	default = kws.get('default', None)
 
 	if reverse:
 		dict = {
@@ -72,7 +73,7 @@ def dict_select(dict, *alternatives, **kws):
 		if alt in dict:
 			return dict[alt]
 
-	return None
+	return default
 
 class SigrokFile(object):
 	def __init__(self, filename):
@@ -222,10 +223,10 @@ freq = source.samplerate
 print "sample rate: {:.6f} MHz".format(freq / 1e6)
 print "probes:", json.dumps(source.probes, indent=1, sort_keys=True)
 
-ch_miso = dict_select(source.probes, 'miso', reverse=True)
-ch_mosi = dict_select(source.probes, 'mosi', reverse=True)
-ch_sclk = dict_select(source.probes, 'sclk', 'clk', reverse=True)
-ch_cs   = dict_select(source.probes, 'cs', 'cs#', '/cs', reverse=True)
+ch_miso = dict_select(source.probes, 'miso', default=0, reverse=True)
+ch_mosi = dict_select(source.probes, 'mosi', default=1, reverse=True)
+ch_sclk = dict_select(source.probes, 'sclk', 'clk', default=2, reverse=True)
+ch_cs   = dict_select(source.probes, 'cs', 'cs#', '/cs', default=3, reverse=True)
 
 assert ch_cs is not None, "Probe for CS must be labeled"
 
