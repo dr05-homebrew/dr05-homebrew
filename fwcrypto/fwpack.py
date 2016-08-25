@@ -6,11 +6,11 @@ import datetime
 import numpy as np
 from fwutils import *
 
-lutfile, flashfile, outfile = sys.argv[1:]
+flashfile, outfile = sys.argv[1:]
 
 pagesize = 512
 
-lut_encode = np.memmap(lutfile, dtype=np.uint8, mode='r')
+lut_encode = np.memmap(os.path.join(os.path.dirname(__file__), "lut_encode.bin"), dtype=np.uint8, mode='r')
 
 flashlength = os.path.getsize(flashfile)
 if flashlength > 0:
