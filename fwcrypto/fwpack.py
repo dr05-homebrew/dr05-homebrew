@@ -6,7 +6,12 @@ import datetime
 import numpy as np
 from fwutils import *
 
-flashfile, outfile = sys.argv[1:]
+flashfile = sys.argv[1]
+
+if sys.argv[2:]:
+	outfile = sys.argv[2]
+else:
+	outfile = flashfile + ".crypted"
 
 pagesize = 512
 
