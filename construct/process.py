@@ -25,7 +25,7 @@ updateHeader = Struct("updateHeader",
 	UBInt8("month"),
 	UBInt32("checksum"),
 	UBInt32("updateFileSize"),
-	Padding(8) # TODO: what is this really?
+	Padding(8) # TODO: what is this really? #TODO: assert = 0x00 rep 8
 	)
 encryptedBody = Bytes("encryptedBody", lambda ctx: ctx.updateHeader.updateFileSize - 0x20)
 
@@ -47,6 +47,10 @@ decBody = SubstitutionCipher(Bytes("decBody", lambda ctx: encBodyLen)) #HAX
 decBodyParsed = decBody.parse(updateParsed.encryptedBody)
 print(len(decBodyParsed))
 #########
+class PrintContext(Construct):
+	def _parse(self, stream, context):
+		print context
+
 
 #see the hardware reference
 blockHeader = Struct("blockHeader",
@@ -76,20 +80,29 @@ blockHeader = Struct("blockHeader",
 	ULInt32("ARGUMENT")        #TODO: hex
 	)
 
+#TODO: find untouched sections
 blockData = Struct("blockData",
-	
+	If(lambda ctx: not ctx._.blockHeader["BLOCK CODE"].BFLAG_FILL,
+		Bytes("data", lambda ctx: ctx._.blockHeader["BYTE COUNT"])
+		),
+	If(lambda ctx: ctx._.blockHeader["BLOCK CODE"].BFLAG_IGNORE,
+		Bytes("skip", lambda ctx: ctx._.blockHeader["BYTE COUNT"])
+		)
 	)
 
 firmware = Struct("firmware",
-#	OptionalGreedyRange(
-		Struct("block",
-			blockHeader,
-			blockData)
-#		)
+	Struct("DXE",	
+		GreedyRange(
+			Struct("block",
+				Anchor("offset"),
+				blockHeader,
+				blockData
+				)
+			)
+		)
 	)
 
 firmwareParsed = firmware.parse(decBodyParsed)
-print(firmwareParsed)
 
 #TODO: assert reduce(operator.xor, header) == 0, and HDRSGN
 
