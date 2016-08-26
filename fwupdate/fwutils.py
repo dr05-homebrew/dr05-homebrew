@@ -2,7 +2,7 @@ from __future__ import division
 import os
 import sys
 import numpy as np
-import cv2
+#import cv2
 
 def invert_permutation(perm):
 	result = np.zeros(256, dtype=np.uint8)

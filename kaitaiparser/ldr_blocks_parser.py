@@ -1,7 +1,7 @@
-from TASCAM_blackfin_firmware import TASCAMBlackfinFirmware
+from update_header import UpdateHeader
 import sys
 
-ff = TASCAMBlackfinFirmware.from_file(sys.argv[1])
+ff = UpdateHeader.from_file(sys.argv[1])
 
 verintstr = str(ff.fw_version)
 

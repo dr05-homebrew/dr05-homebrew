@@ -1,5 +1,5 @@
 meta:
-  id: TASCAM_blackfin_firmware
+  id: update_header
   endian: be
 seq:
   - id: device_name
