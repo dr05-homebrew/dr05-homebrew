@@ -90,3 +90,6 @@ firmware = Struct("firmware",
 
 firmwareParsed = firmware.parse(decBodyParsed)
 print(firmwareParsed)
+
+#TODO: assert reduce(operator.xor, header) == 0, and HDRSGN
+
