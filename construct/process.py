@@ -4,6 +4,7 @@ import sys
 import operator
 import base64
 from texttable import Texttable
+import subprocess, tempfile
 
 class SubstitutionCipher(Adapter):
 	def __init__(self, *args, **kwargs):
@@ -99,17 +100,23 @@ firmware = Struct("firmware",
 	)
 
 
-def pprintHeader(block):
+def enabledFlags(hdr):
+	return [f for f,v in hdr["BLOCK CODE"].items() if v and "BFLAG" in f]
+
+def hasPayload(hdr): #TODO: look into the conditions of this more
+	if "BFLAG_FILL" not in enabledFlags(hdr) and hdr["BYTE COUNT"]:
+		return True
+
+def pprintHeader(block, cnt):
 	#TODO: use indent instead of adding more columns to the left?
 	hdr = block.blockHeader
 
 	#i dont think theres a good way to get the original data, so we just have to believe this will give the original data...
 	bs = [base64.b16encode(b) for b in blockHeader.build(hdr)]
-	brow = [hex(hdr.offset)+":", " ".join(reversed(bs[0:4])), " ".join(reversed(bs[4:8])), " ".join(reversed(bs[8:12])), " ".join(reversed(bs[12:16]))]
+	brow = ["%s. %s:" % (cnt, hex(hdr.offset)), " ".join(reversed(bs[0:4])), " ".join(reversed(bs[4:8])), " ".join(reversed(bs[8:12])), " ".join(reversed(bs[12:16]))]
 	
-	enabledFlags = [f for f,v in hdr["BLOCK CODE"].items() if v and "BFLAG" in f]
 	flagrows = []
-	for f in enabledFlags:
+	for f in enabledFlags(hdr):
 		addrmsg, countmsg, argmsg = "", "", ""
 
 		if f == "BFLAG_FILL":
@@ -139,24 +146,52 @@ def pprintHeader(block):
 
 	table = Texttable(max_width=90)
 	table.set_deco(0)
-	table.set_cols_width([9,12,12,12,12])
+	table.set_cols_width([14,12,12,12,12])
 	table.set_cols_align(["l","l","l","l","l"])
 	table.add_rows(rows)
 	print(table.draw())
 	print
 
+def objdumpDisasBlock(objdumpPath, block, tmpdir):
+#TODO:
+#      --start-address=ADDR       Only process data whose address is >= ADDR
+#      --stop-address=ADDR        Only process data whose address is <= ADDR
+
+	with tempfile.NamedTemporaryFile(dir=tmpdir) as f:
+		offset = block.blockHeader.offset
+		len = block.blockHeader["BYTE COUNT"]
+		f.write(body[offset+16:offset+16+len])
+		f.flush()
+
+		command = ["%s/bfin-linux-uclibc-objdump" % objdumpPath, 
+				"-D",
+				"-m", "bfin",
+				"-b", "binary",
+				"--adjust-vma=%s" % hex(hdr["TARGET ADDRESS"]), 
+				 f.name]
+		output = subprocess.check_output(command).split("\n", 7)[-1]
+		output = output.split("\n")
+
+		for l in output:
+			print(" "*10 + l.lstrip())
+
 body = updateParsed.decryptedBody
 firmwareParsed = firmware.parse(body)
 
+tmpd = tempfile.mkdtemp()
 for dxe in firmwareParsed.DXE:
-	for i,block in enumerate(firmwareParsed.DXE.block):
+	for i, block in enumerate(firmwareParsed.DXE.block):
 		hdr = block.blockHeader
 		offset = hdr.offset
 
-		hdr_checkxor =  reduce(operator.xor, [ord(x) for x in body[offset:offset+16]])
+		bytesl = [ord(x) for x in body[offset:offset+16]]
+		hdr_checkxor = reduce(operator.xor, bytesl)
 		assert hdr_checkxor == 0
 
 		assert hdr["TARGET ADDRESS"] % 4 == 0
 		assert hdr["BYTE COUNT"] % 4 == 0
 
-		pprintHeader(block)
+		pprintHeader(block, i)
+		if(hasPayload(hdr)):
+			objdumpDisasBlock(sys.argv[2], firmwareParsed.DXE.block[i], tmpd)
+		print("-"*90)
