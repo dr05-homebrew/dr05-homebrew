@@ -100,15 +100,36 @@ firmware = Struct("firmware",
 
 
 def pprintHeader(block):
-	#TODO: use indent instead of adding more columns to the left
+	#TODO: use indent instead of adding more columns to the left?
 	hdr = block.blockHeader
 
-	#i dont think theres a way to get the original data, so we just have to believe this will give the original data...
+	#i dont think theres a good way to get the original data, so we just have to believe this will give the original data...
 	bs = [base64.b16encode(b) for b in blockHeader.build(hdr)]
-	brow = [hex(hdr.offset), " ".join(bs[0:4]), " ".join(bs[4:8]), " ".join(bs[8:12]), " ".join(bs[12:16])]
+	brow = [hex(hdr.offset)+":", " ".join(bs[0:4]), " ".join(bs[4:8]), " ".join(bs[8:12]), " ".join(bs[12:16])]
 	
 	enabledFlags = [f for f,v in hdr["BLOCK CODE"].items() if v and "BFLAG" in f]
-	flagrows = [["", f, "","",""] for f in enabledFlags]
+	flagrows = []
+	for f in enabledFlags:
+		addrmsg, countmsg, argmsg = "", "", ""
+
+		if f == "BFLAG_FILL":
+			addrmsg += "(fill memory at addr)"
+			argmsg += "(fill value)"
+			countmsg += "(no payload, fill length?)" #TODO: is fill length correct?
+		elif f == "BFLAG_INIT":
+			addrmsg += "(call addr after optional payload load)"
+				#TODO: "For example a zero-sized BFLAG_INIT block
+				#would instruct the boot kernel to call a subroutine residing in ROM or
+				#flash memory. This method is used to activate the CRC32 feature."
+		elif f == "BFLAG_IGNORE":
+			countmsg += "(redirect boot source pointer)"
+		elif f == "BFLAG_FIRST":
+			addrmsg += "(jmp target at end of boot)"
+			argmsg += "(relative next-DXE pointer ^ next free boot source address after current boot stream)"
+		elif f == "BFLAG_FINAL":
+			f += "\n(pass control to application)"
+
+		flagrows.append(["", f, addrmsg, countmsg, argmsg])
 
 	rows = [
 		brow,
@@ -116,9 +137,11 @@ def pprintHeader(block):
 		]
 	rows.extend(flagrows)
 
-	table = Texttable()
-	table.add_rows(rows)
+	table = Texttable(max_width=90)
 	table.set_deco(0)
+	table.set_cols_width([9,12,12,12,12])
+	table.set_cols_align(["l","l","l","l","l"])
+	table.add_rows(rows)
 	print(table.draw())
 	print
 
@@ -127,9 +150,13 @@ firmwareParsed = firmware.parse(body)
 
 for dxe in firmwareParsed.DXE:
 	for i,block in enumerate(firmwareParsed.DXE.block):
-		offset = block.blockHeader.offset
+		hdr = block.blockHeader
+		offset = hdr.offset
 
 		hdr_checkxor =  reduce(operator.xor, [ord(x) for x in body[offset:offset+16]])
 		assert hdr_checkxor == 0
+
+		assert hdr["TARGET ADDRESS"] % 4 == 0
+		assert hdr["BYTE COUNT"] % 4 == 0
 
 		pprintHeader(block)
