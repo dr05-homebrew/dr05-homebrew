@@ -105,7 +105,7 @@ def pprintHeader(block):
 
 	#i dont think theres a good way to get the original data, so we just have to believe this will give the original data...
 	bs = [base64.b16encode(b) for b in blockHeader.build(hdr)]
-	brow = [hex(hdr.offset)+":", " ".join(bs[0:4]), " ".join(bs[4:8]), " ".join(bs[8:12]), " ".join(bs[12:16])]
+	brow = [hex(hdr.offset)+":", " ".join(reversed(bs[0:4])), " ".join(reversed(bs[4:8])), " ".join(reversed(bs[8:12])), " ".join(reversed(bs[12:16]))]
 	
 	enabledFlags = [f for f,v in hdr["BLOCK CODE"].items() if v and "BFLAG" in f]
 	flagrows = []
