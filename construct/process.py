@@ -74,14 +74,18 @@ def dump_block(**kwargs):  # blockidx, pbm, headerinfo, disas, raw, raw_only_hea
             pprintHeader(block, i)
 
         if kwargs["disas"]:
-            assert hasPayload(hdr)
+            try:
+                assert hasPayload(hdr)
+                if "OBJDUMP_PATH" in os.environ:
+                    objdumpPath = os.environ["OBJDUMP_PATH"]
+                else:
+                    objdumpPath = "blackfin-linux-uclibc-obdump"  # TODO: whats the difference between all the versions?
 
-            if "OBJDUMP_PATH" in os.environ:
-                objdumpPath = os.environ["OBJDUMP_PATH"]
-            else:
-                objdumpPath = "blackfin-linux-uclibc-obdump"  # TODO: whats the difference between all the versions?
+                objdumpDisasBlock(objdumpPath, block, decryptedBlobFile.name)
+            except AssertionError as e:
+                print(e)  # TODO
 
-            objdumpDisasBlock(objdumpPath, block, decryptedBlobFile.name)
+
 
         if kwargs["pbm"]:
             pass
