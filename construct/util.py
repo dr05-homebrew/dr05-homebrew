@@ -4,7 +4,9 @@ import subprocess
 import tempfile
 import operator
 
+
 def headerAsserts(hdr):
+    # Note that constants are checked inside struct parsing with Const()
     bytesl = [ord(x) for x in hdr.headerBytes]
     hdr_checkxor = reduce(operator.xor, bytesl)
     assert hdr_checkxor == 0
@@ -22,11 +24,11 @@ def hasPayload(hdr):  # TODO: look into the conditions of this more
         return True
 
 
-def pprintHeader(block, cnt):
+def pprintHeader(block, idx):
     hdr = block.blockHeader
 
     bs = [base64.b16encode(b) for b in hdr.headerBytes]
-    brow = ["%s. %s:" % (cnt, hex(hdr.offset)),
+    brow = ["%s. %s:" % (idx, hex(hdr.offset)),
             " ".join(reversed(bs[0:4])),
             " ".join(reversed(bs[4:8])),
             " ".join(reversed(bs[8:12])),
@@ -69,14 +71,9 @@ def pprintHeader(block, cnt):
     print(table.draw())
     print
 
-#def tf(id):
-#	if tmp:
-#		return tempfile.NamedTemporaryFile(dir=tmpdir)
-#	else:
-#		return open("%s.bin" % id. "wb")
 
 def objdumpDisasBlock(objdumpPath, block, decryptedBlobPath):
-# TODO: use indent instead of adding more columns to the left?
+    # TODO: use indent instead of adding more columns to the left?
     hdr = block.blockHeader
     offset = block.blockHeader.offset
     len = block.blockHeader["BYTE COUNT"]
@@ -84,7 +81,7 @@ def objdumpDisasBlock(objdumpPath, block, decryptedBlobPath):
     baseOffset = hdr["TARGET ADDRESS"]
     startOffset = baseOffset+offset+16
     stopOffset = baseOffset+offset+16+len
-    command = ["%s/bfin-linux-uclibc-objdump" % objdumpPath,
+    command = [objdumpPath,
                "-D",
                "-m", "bfin",
                "-b", "binary",

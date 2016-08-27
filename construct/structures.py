@@ -1,4 +1,5 @@
 from construct import *
+#TODO: add laziness?
 
 
 class SubstitutionCipher(Adapter):
@@ -15,21 +16,22 @@ class SubstitutionCipher(Adapter):
 
 
 fwUpdateFile = Struct("fwUpdateFile",
-                      Struct("updateHeader",
-                             String("deviceName", 8, "ASCII"),
-                             UBInt16("fwVersion"),
-                             UBInt16("fwNumericVersion"),
-                             UBInt16("year"),
-                             UBInt8("day"),
-                             UBInt8("month"),
-                             UBInt32("checksum"),
-                             UBInt32("updateFileSize"),
-                             Const(UBInt64("padding"), 0)  # TODO: what is this really? (check the code?)
-                             ),
-                      Anchor("body"), Bytes("encryptedBody", lambda ctx: ctx.updateHeader.updateFileSize - 0x20),
-                      Pointer(lambda ctx: ctx.body, SubstitutionCipher(
-                          Bytes("decryptedBody", lambda ctx: ctx.updateHeader.updateFileSize - 0x20))
-                              ))
+    Struct("updateHeader",
+         String("deviceName", 8, "ASCII"),
+         UBInt16("fwVersion"),
+         UBInt16("fwNumericVersion"),
+         UBInt16("year"),
+         UBInt8("day"),
+         UBInt8("month"),
+         UBInt32("checksum"),
+         UBInt32("updateFileSize"),
+         Const(UBInt64("padding"), 0)  # TODO: what is this really? (check the code?)
+         ),
+    Anchor("body"), Bytes("encryptedBody", lambda ctx: ctx.updateHeader.updateFileSize - 0x20),
+    Pointer(lambda ctx: ctx.body, SubstitutionCipher(
+        Bytes("decryptedBody", lambda ctx: ctx.updateHeader.updateFileSize - 0x20))
+        )
+    )
 
 ##############
 
