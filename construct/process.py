@@ -5,12 +5,35 @@ import os
 from structures import *
 from util import *
 
+global blobFile  # TODO: fix with Click context passing stuff
+global blobData
+global blobParsed
+global firmwareParsed
+global decryptedBlobFile
 
 ########
 @click.group()
 @click.argument('BLOB', nargs=1, type=click.File('rb'))
 def cli(blob):
-    pass
+    """
+    BLOB is the path to the firmware file.
+    """
+    global blobFile
+    global blobData
+    global blobParsed
+    global firmwareParsed
+    global decryptedBlobFile
+
+    blobFile = blob
+    blobData = blobFile.read()
+
+    blobParsed = fwUpdateFile.parse(blobData)
+
+    decryptedBlobFile = tempfile.NamedTemporaryFile()
+    decryptedBlobFile.write(blobParsed.decryptedBody)
+    decryptedBlobFile.flush()
+
+    firmwareParsed = firmware.parse(blobParsed.decryptedBody)
 
 @click.group()
 def dump():
@@ -30,34 +53,90 @@ def patch():
 @click.option('--raw', help='output raw block bytes (implies decryption)', is_flag=True)
 @click.option('--raw-only-header', help='output raw block header (implies decryption)', is_flag=True)
 @click.option('--raw-only-body', help='output raw block body (implies decryption)', is_flag=True)
-@click.option('--to-files', help='output individual blocks to individual files instead of stdout')
+@click.option('--to-files', help='output individual blocks to individual files instead of stdout', type=click.Path(exists=True))
 @click.option('--fname-format', help='used by --to-files: python format string taking {dxe} and {blockid}', default='{dxe}-{blockid}.bin')
-def dump_block():
-    pass
+def dump_block(**kwargs):  # blockidx, pbm, headerinfo, disas, raw, raw_only_header, raw_only_body, to_files, fname_format
+    if kwargs["blockidx"]:
+        blocks = [int(c) for c in kwargs["blockidx"].split(",")]
+    else:
+        blocks = range(0, len(firmwareParsed.DXE[0]))
+
+    for i in blocks:
+        block = firmwareParsed.DXE.block[i]
+        hdr = block.blockHeader
+
+        try:
+            headerAsserts(hdr)
+        except AssertionError as e:
+            print(e)  # TODO
+
+        if kwargs["headerinfo"]:
+            pprintHeader(block, i)
+
+        if kwargs["disas"]:
+            assert hasPayload(hdr)
+
+            if "OBJDUMP_PATH" in os.environ:
+                objdumpPath = os.environ["OBJDUMP_PATH"]
+            else:
+                objdumpPath = "blackfin-linux-uclibc-obdump"  # TODO: whats the difference between all the versions?
+
+            objdumpDisasBlock(objdumpPath, block, decryptedBlobFile.name)
+
+        if kwargs["pbm"]:
+            pass
+
+        if kwargs["raw"]:
+            pass
+
+        if kwargs["raw_only_header"]:
+            pass
+
+        if kwargs["raw_only_body"]:
+            pass
+
+        if kwargs["to_files"]:
+            pass
+
+        if kwargs["fname_format"]:
+            pass
+
+        print("-" * 90)
+
 
 @click.command()
 def dump_header():
+    print(blobParsed.updateHeader)
+    print("Firmware body length: %s" % len(blobParsed.decryptedBody))
     pass
 
 @click.command()
 @click.option('--decrypt', is_flag=True)
-def dump_body():
+def dump_body(**kwargs):
     pass
 ########
 #patch
 @click.command()
-@click.option('--recalc-hdr-checksum', help='recalculate the checksum for the block header', is_flag=True)
-@click.argument('IDX', nargs=1)#, help='zero-based index of the block to patch', nargs=1)
-@click.argument('JSON', nargs=1)#, help='a json string mirroring the structure containing the values to patch', nargs=1)
-def patch_struct():
+@click.option('--patch-hdr-checksum', help='automatically recalculate and patch the checksum for the block header', is_flag=True)
+@click.argument('IDX', nargs=1, type=int)
+@click.argument('JSON', nargs=1)
+def patch_struct(**kwargs):
+    """
+    IDX is the zero-based index of the block to patch
+    JSON is a json string mirroring the structure containing the values to patch
+    """
     pass
 
 @click.command()
-@click.option('--blockidx', help='zero-based index of block to patch')
+@click.argument('PATCHFILE', nargs=1, type=click.File('rb'))
+@click.option('--blockidx', help='zero-based index of block to patch', type=int)
 @click.option('--offset', help='if blockidx is specified this is the offset inside the block, otherwise it is the offset from the beginning of the header')
 @click.option('--already-encrypted', help='use this if you are patching with already encrypted data', is_flag=True)
-@click.option('--mask', help='bitmask file to use when patching')
+@click.option('--mask', help='bitmask file to use when patching', type=click.File('rb'))
 def patch_binary():
+    """
+    PATCHFILE is the path to the binary patch file
+    """
     pass
 ########
 
@@ -74,36 +153,4 @@ dump.add_command(dump_body, name="body")
 if __name__ == '__main__':
     cli()
 
-exit()
-
-blobPath = sys.argv[1]
-objdumpPath = sys.argv[2]
-
-if "OBJDUMP_PATH" in os.environ:
-    objdumpPath = os.environ["OBJDUMP_PATH"]
-else:
-    objdumpPath = "blackfin-linux-uclibc-obdump" #TODO: whats the difference between all the versions?
-
-data = open(blobPath, "rb").read()
-
-updateParsed = fwUpdateFile.parse(data)
-print(updateParsed.updateHeader)
-print("Firmware body length: %s" % len(updateParsed.decryptedBody))
-
-decryptedBlobFile = tempfile.NamedTemporaryFile()
-decryptedBlobFile.write(updateParsed.decryptedBody)
-decryptedBlobFile.flush()
-
-firmwareParsed = firmware.parse(updateParsed.decryptedBody)
-
-for dxe in firmwareParsed.DXE:  # TODO: not implemented yet
-    for i, block in enumerate(firmwareParsed.DXE.block):
-        hdr = block.blockHeader
-
-        headerAsserts(hdr)
-
-        pprintHeader(block, i)
-        if hasPayload(hdr):
-            objdumpDisasBlock(objdumpPath, firmwareParsed.DXE.block[i], decryptedBlobFile.name)
-        print("-" * 90)
 

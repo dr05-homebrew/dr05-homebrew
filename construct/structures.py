@@ -75,7 +75,7 @@ blockData = Struct("blockData",
     )
 
 firmware = Struct("firmware",
-    Struct("DXE",
+    Struct("DXE", # TODO: not implemented yet
         GreedyRange(
             Struct("block",
                 blockHeader,
