@@ -10,3 +10,4 @@ Uses the LUTs from fwupdate.
 Example:
 python2 process.py ../../dr05rev/tmp/cccac.yay dump block --headerinfo --disas --to-files test --fname-format "{dxe}-{blockid}.txt"
 python2 process.py ../../dr05rev/tmp/cccac.yay dump block --raw --to-files test
+python2 process.py ../../dr05rev/tmp/cccac.yay dump block --pbm --to-files test --fname-format "{blockid}.pbm"

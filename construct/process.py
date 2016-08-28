@@ -112,10 +112,10 @@ def dump_block(**kwargs):  # blockidx, pbm, headerinfo, disas, raw, raw_only_hea
                 width = int(width)
                 offset = int(offset)
 
-                data = block.blockData.data
+                data = block.blockData.data[offset:]
 
                 height = int(math.ceil(((len(block.blockData.data) - offset) * 8) / float(width)))
-                data += "\x00" * ((height*width/8) - len(block.blockData.data))  # pad
+                data += "\x00" * ((height*width/8) - (len(block.blockData.data) - offset))  # pad
 
                 img = PIL.Image.frombytes(mode="1", size=(width, height), data=data)
 
