@@ -51,8 +51,9 @@ def patch():
 #dump
 @click.command()
 @click.option('--blockidx', help='comma separated list of zero-based block indexes e.g.: 0,4,5,100, if it\'s not set all blocks are processed')
-@click.option('--pbm', help='pbm output, arguments: WIDTH:OFFSET, where offset is in pixels (i.e. bits)')
-@click.option('--headerinfo', help='output header with human readable information', is_flag=True)
+@click.option('--pbm', help='pbm output, arguments: WIDTH:OFFSET, where offset is in bytes (i.e. *8 bits)', is_flag=True)
+@click.option('--pbm-format', help='arguments: WIDTH:OFFSET, where offset is in bytes (i.e. *8 bits), defaults to 128:0', default='128:0')
+@click.option('--header-info', help='output header with human readable information', is_flag=True)
 @click.option('--disas', help='output objdump disassembly. Specify path to blackfin supporting objdump binary with OBJDUMP_PATH', is_flag=True)
 @click.option('--raw', help='output raw block bytes (implies decryption)', is_flag=True)
 @click.option('--raw-only-header', help='output raw block header (implies decryption)', is_flag=True)
@@ -75,13 +76,19 @@ def dump_block(**kwargs):  # blockidx, pbm, headerinfo, disas, raw, raw_only_hea
             print(e)  # TODO
 
         if kwargs["to_files"]:
-            path = os.path.join(kwargs["to_files"], kwargs["fname_format"].format(dxe=0, blockid=i))
-            f = open(path, "wb")  # TODO: dxe
+            try:
+                if kwargs["pbm"] or kwargs["disas"] or kwargs["raw_only_body"] and not (kwargs["header_info"] or kwargs["raw_only_header"]):
+                    assert hasPayload(block)
+                path = os.path.join(kwargs["to_files"], kwargs["fname_format"].format(dxe=0, blockid=i))
+                f = open(path, "wb")  # TODO: dxe
+            except AssertionError as e:
+                #print(repr(e))  # TODO
+                continue
 
             stdoutsave = sys.stdout
             sys.stdout = f
 
-        if kwargs["headerinfo"]:
+        if kwargs["header_info"]:
             pprintHeader(block, i)
 
         if kwargs["disas"]:
@@ -97,7 +104,27 @@ def dump_block(**kwargs):  # blockidx, pbm, headerinfo, disas, raw, raw_only_hea
                 print(e)  # TODO
 
         if kwargs["pbm"]:
-            raise NotImplemented
+            try:
+                assert hasPayload(block)
+                import PIL.Image
+                import math
+                width, offset = kwargs["pbm_format"].split(":")
+                width = int(width)
+                offset = int(offset)
+
+                data = block.blockData.data
+
+                height = int(math.ceil(((len(block.blockData.data) - offset) * 8) / float(width)))
+                data += "\x00" * ((height*width/8) - len(block.blockData.data))  # pad
+
+                img = PIL.Image.frombytes(mode="1", size=(width, height), data=data)
+
+                vf = BytesIO()
+                img.save(vf, format="ppm")
+                vf.seek(0)
+                sys.stdout.write(vf.read())
+            except AssertionError as e:
+                print(e)  # TODO
 
         if kwargs["raw"]:  # TODO: make mutex
             sys.stdout.write(block.blockHeader.headerBytes)
