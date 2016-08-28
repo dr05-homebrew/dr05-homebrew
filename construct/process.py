@@ -136,8 +136,27 @@ def dump_header():
 
 @click.command()
 @click.option('--decrypt', is_flag=True)
+@click.option('--to-file', help='output to file instead of stdout', type=click.File('wb'))
 def dump_body(**kwargs):
-    pass
+    if kwargs["to_file"]:
+        f = kwargs["to_file"]
+        stdoutsave = sys.stdout
+        sys.stdout = f
+
+    if kwargs["decrypt"]:
+        data = blobParsed.decryptedBody
+    else:
+        data = blobParsed.encryptedBody
+
+    sys.stdout.write(data)
+    sys.stdout.flush()
+
+    if kwargs["to_file"]:  # TODO: more proper wrapping
+        f.flush()
+        f.close()
+        sys.stdout = stdoutsave
+
+
 ########
 #patch
 @click.command()
