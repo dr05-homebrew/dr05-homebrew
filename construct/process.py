@@ -1,6 +1,7 @@
 import sys
 import click
 import os
+import os.path
 
 from structures import *
 from util import *
@@ -46,7 +47,7 @@ def patch():
 ########
 #dump
 @click.command()
-@click.option('--blockidx', help='comma separated list of zero-based block indexes e.g.: 0,4,5,100')
+@click.option('--blockidx', help='comma separated list of zero-based block indexes e.g.: 0,4,5,100, if it\'s not set all blocks are processed')
 @click.option('--pbm', help='pbm output, arguments: WIDTH:OFFSET, where offset is in pixels (i.e. bits)')
 @click.option('--headerinfo', help='output header with human readable information', is_flag=True)
 @click.option('--disas', help='output objdump disassembly. Specify path to blackfin supporting objdump binary with OBJDUMP_PATH', is_flag=True)
@@ -70,6 +71,13 @@ def dump_block(**kwargs):  # blockidx, pbm, headerinfo, disas, raw, raw_only_hea
         except AssertionError as e:
             print(e)  # TODO
 
+        if kwargs["to_files"]:
+            path = os.path.join(kwargs["to_files"], kwargs["fname_format"].format(dxe=0,blockid=i))
+            f = open(path, "wb")  # TODO: dxe
+
+            stdoutsave = sys.stdout
+            sys.stdout = f
+
         if kwargs["headerinfo"]:
             pprintHeader(block, i)
 
@@ -85,27 +93,26 @@ def dump_block(**kwargs):  # blockidx, pbm, headerinfo, disas, raw, raw_only_hea
             except AssertionError as e:
                 print(e)  # TODO
 
-
-
         if kwargs["pbm"]:
-            pass
+            raise NotImplemented
 
-        if kwargs["raw"]:
-            pass
+        if kwargs["raw"]:  # TODO: make mutex
+            raise NotImplemented
 
         if kwargs["raw_only_header"]:
-            pass
+            raise NotImplemented
 
         if kwargs["raw_only_body"]:
-            pass
+            raise NotImplemented
 
-        if kwargs["to_files"]:
-            pass
+        if len(blocks) != 1 and not kwargs["to_files"]:  # TODO: /stdout, binary?
+            print("-" * 90)
 
-        if kwargs["fname_format"]:
-            pass
+        if kwargs["to_files"]:  # TODO: more proper wrapping
+            f.flush()
+            f.close()
+            sys.stdout = stdoutsave
 
-        print("-" * 90)
 
 
 @click.command()

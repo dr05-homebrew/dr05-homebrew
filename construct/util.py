@@ -90,7 +90,7 @@ def objdumpDisasBlock(objdumpPath, block, decryptedBlobPath):
                "--stop-address", hex(stopOffset),
                decryptedBlobPath]
 
-    print(" ".join(command))
+    #print(" ".join(command))
     output = subprocess.check_output(command).split("\n", 7)[-1]
     output = output.split("\n")
 
