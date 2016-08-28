@@ -2,6 +2,9 @@ import sys
 import click
 import os
 import os.path
+from io import BytesIO
+import shutil
+import construct
 
 from structures import *
 from util import *
@@ -172,15 +175,63 @@ def patch_struct(**kwargs):
 
 @click.command()
 @click.argument('PATCHFILE', nargs=1, type=click.File('rb'))
+@click.argument('OUTFILE', nargs=1, type=click.File('wb'))
 @click.option('--blockidx', help='zero-based index of block to patch', type=int)
 @click.option('--offset', help='if blockidx is specified this is the offset inside the block, otherwise it is the offset from the beginning of the header')
 @click.option('--already-encrypted', help='use this if you are patching with already encrypted data', is_flag=True)
-@click.option('--mask', help='bitmask file to use when patching', type=click.File('rb'))
-def patch_binary():
+@click.option('--patch-block-hdr-checksum', help='automatically recalculate and patch the checksum for the block header (for the lazy)', is_flag=True)
+@click.option('--patch-blob-hdr-checksum', help='automatically recalculate and patch the checksum for the blob header (for the lazy)', is_flag=True)
+@click.option('--mask', help='bitmask file to use when patching, the first byte of the mask corresponds to the first byte of the patchfile', type=click.File('rb'))
+#@click.option('--overwrite', help='overwrite original blob')  # TODO?
+def patch_binary(**kwargs):
     """
     PATCHFILE is the path to the binary patch file
     """
-    pass
+
+    of = kwargs["OUTFILE"]
+    data = kwargs["PATCHFILE"].read()
+    mask = kwargs["mask"].read()
+
+    offset = 0
+    if kwargs["blockidx"]:
+        i = kwargs["blockidx"]
+        offset = firmwareParsed.DXE.block[i].blockHeader.offset
+
+    if kwargs["offset"]:
+        assert offset[0:2] == "0x"
+        offset += int(kwargs["offset"][2:], 16)
+
+    if not kwargs["already_encrypted"]:
+        data = SubstitutionCipher(Bytes(len(data))).build(data)
+
+    blobFile.seek(0)
+    shutil.copyfileobj(blobFile, of)
+    of.seek(0)
+
+    dataf = BytesIO(data)
+    maskf = BytesIO(mask)
+    blobFile.seek(offset)
+    of.seek(offset)
+
+    maskbyte, databyte, blobbyte = maskf.read(1), dataf.read(1), blobFile.read(1)
+    while maskbyte and databyte and blobbyte:
+        of.write((blobbyte & ~maskbyte) | (databyte & maskbyte))
+        maskbyte, databyte, blobbyte = maskf.read(1), dataf.read(1), blobFile.read(1)
+
+    if kwargs["patch_block_hdr_checksum"]:
+        of.seek(firmwareParsed.DXE.block[i].blockHeader.offset)
+
+        bytesl = [ord(x) for x in of.read(4)]  # TODO: move to seaparate function (see also asserts)
+        hdr_checkxor = reduce(operator.xor, bytesl)
+        of.seek(firmwareParsed.DXE.block[i].blockHeader.offset + 3)
+        of.write(construct.UBInt32("").build(hdr_checkxor))
+
+    if kwargs["patch_blob_hdr_checksum"]:
+        of.seek(0)
+        checksum = sum(data)
+        of.seek(16)
+        of.write(construct.ULInt32("").build(checksum))
+
 ########
 
 cli.add_command(dump)
