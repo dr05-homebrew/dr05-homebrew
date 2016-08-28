@@ -60,7 +60,7 @@ def dump_block(**kwargs):  # blockidx, pbm, headerinfo, disas, raw, raw_only_hea
     if kwargs["blockidx"]:
         blocks = [int(c) for c in kwargs["blockidx"].split(",")]
     else:
-        blocks = range(0, len(firmwareParsed.DXE[0]))
+        blocks = range(0, len(firmwareParsed.DXE.block))
 
     for i in blocks:
         block = firmwareParsed.DXE.block[i]
@@ -72,7 +72,7 @@ def dump_block(**kwargs):  # blockidx, pbm, headerinfo, disas, raw, raw_only_hea
             print(e)  # TODO
 
         if kwargs["to_files"]:
-            path = os.path.join(kwargs["to_files"], kwargs["fname_format"].format(dxe=0,blockid=i))
+            path = os.path.join(kwargs["to_files"], kwargs["fname_format"].format(dxe=0, blockid=i))
             f = open(path, "wb")  # TODO: dxe
 
             stdoutsave = sys.stdout
