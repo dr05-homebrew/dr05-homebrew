@@ -228,8 +228,12 @@ def patch_binary(**kwargs):
         offset = firmwareParsed.DXE.block[i].blockHeader.offset
 
     if kwargs["offset"]:
-        assert offset[0:2] == "0x"
-        offset += int(kwargs["offset"][2:], 16)
+        try:
+            assert offset[0:2] == "0x"
+            offset += int(kwargs["offset"][2:], 16)
+        except AssertionError:
+            offset += int(kwargs["offset"])
+
 
     if not kwargs["already_encrypted"]:
         data = SubstitutionCipher(Bytes("", len(data))).build(data)
@@ -245,7 +249,7 @@ def patch_binary(**kwargs):
     maskedOrig = [ord(blobbyte) & ~ord(maskbyte) for blobbyte, maskbyte in zip(blob, mask)]
     maskedPatch = [ord(databyte) & ord(maskbyte) for databyte, maskbyte in zip(data, mask)]
 
-    for orig, patch in zip(maskedOrig, maskedPatch):
+    for orig, patch in zip(maskedOrig, maskedPatch):  # TODO:what if patch is longer than the file?
         of.write(chr(orig | patch))
 
     if kwargs["patch_block_hdr_checksum"]:
