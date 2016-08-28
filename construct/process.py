@@ -83,7 +83,7 @@ def dump_block(**kwargs):  # blockidx, pbm, headerinfo, disas, raw, raw_only_hea
 
         if kwargs["disas"]:
             try:
-                assert hasPayload(hdr)
+                assert hasPayload(block)
                 if "OBJDUMP_PATH" in os.environ:
                     objdumpPath = os.environ["OBJDUMP_PATH"]
                 else:
@@ -97,13 +97,26 @@ def dump_block(**kwargs):  # blockidx, pbm, headerinfo, disas, raw, raw_only_hea
             raise NotImplemented
 
         if kwargs["raw"]:  # TODO: make mutex
-            raise NotImplemented
+            sys.stdout.write(block.blockHeader.headerBytes)
+            try:
+                assert hasPayload(block)
+                sys.stdout.write(block.blockData.data)
+            except AssertionError as e:
+                print(e)  # TODO
+            sys.stdout.flush()
 
         if kwargs["raw_only_header"]:
-            raise NotImplemented
+            sys.stdout.write(block.blockHeader.headerBytes)
+            sys.stdout.flush()
 
         if kwargs["raw_only_body"]:
-            raise NotImplemented
+            try:
+                assert hasPayload(block)
+                sys.stdout.write(block.blockData.data)
+            except AssertionError as e:
+                print(e)  # TODO
+            sys.stdout.flush()
+
 
         if len(blocks) != 1 and not kwargs["to_files"]:  # TODO: /stdout, binary?
             print("-" * 90)

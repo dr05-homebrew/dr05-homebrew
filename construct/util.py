@@ -19,8 +19,9 @@ def enabledFlags(hdr):
     return [f for f, v in hdr["BLOCK CODE"].items() if v and "BFLAG" in f]
 
 
-def hasPayload(hdr):  # TODO: look into the conditions of this more
-    if "BFLAG_FILL" not in enabledFlags(hdr) and hdr["BYTE COUNT"]:
+def hasPayload(block):  # TODO: look into the conditions of this more
+    hdr = block.blockHeader
+    if "BFLAG_FILL" not in enabledFlags(hdr) and hdr["BYTE COUNT"] and ("data" in block.blockData and block.blockData.data):
         return True
 
 

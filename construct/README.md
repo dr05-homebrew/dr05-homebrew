@@ -5,3 +5,7 @@ Requires the "Click" package for commandline parsing.
 Disassembly dumping requires an objdump executable with blackfin support.
 
 Uses the LUTs from fwupdate.
+
+
+Example:
+python2 process.py ../../dr05rev/tmp/cccac.yay dump block --headerinfo --disas --to-files test --fname-format "{dxe}-{blockid}.txt"
