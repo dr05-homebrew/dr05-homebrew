@@ -52,14 +52,15 @@ def patch():
 @click.command()
 @click.option('--blockidx', help='comma separated list of zero-based block indexes e.g.: 0,4,5,100, if it\'s not set all blocks are processed')
 @click.option('--pbm', help='pbm output, arguments: WIDTH:OFFSET, where offset is in bytes (i.e. *8 bits)', is_flag=True)
-@click.option('--pbm-format', help='arguments: WIDTH:OFFSET, where offset is in bytes (i.e. *8 bits), defaults to 128:0', default='128:0')
+@click.option('--pbm-format', help='overridden by --iter-widths, arguments: WIDTH:OFFSET, where offset is in bytes (i.e. *8 bits), defaults to 128:0', default='128:0')
+@click.option('--iter-widths', help='output multiple pbms with various widths, arguments: start:stop , overrides --pbm-format')
 @click.option('--header-info', help='output header with human readable information', is_flag=True)
 @click.option('--disas', help='output objdump disassembly. Specify path to blackfin supporting objdump binary with OBJDUMP_PATH', is_flag=True)
 @click.option('--raw', help='output raw block bytes (implies decryption)', is_flag=True)
 @click.option('--raw-only-header', help='output raw block header (implies decryption)', is_flag=True)
 @click.option('--raw-only-body', help='output raw block body (implies decryption)', is_flag=True)
 @click.option('--to-files', help='output individual blocks to individual files instead of stdout', type=click.Path(exists=True))
-@click.option('--fname-format', help='used by --to-files: python format string taking {dxe} and {blockid}', default='{dxe}-{blockid}.bin')
+@click.option('--fname-format', help='used by --to-files: python format string taking {dxe} and {blockid}, {width} if --pbm-format', default='{dxe}-{blockid}.bin')
 def dump_block(**kwargs):  # blockidx, pbm, headerinfo, disas, raw, raw_only_header, raw_only_body, to_files, fname_format
     if kwargs["blockidx"]:
         blocks = [int(c) for c in kwargs["blockidx"].split(",")]
@@ -75,86 +76,99 @@ def dump_block(**kwargs):  # blockidx, pbm, headerinfo, disas, raw, raw_only_hea
         except AssertionError as e:
             print(e)  # TODO
 
-        if kwargs["to_files"]:
-            try:
-                if kwargs["pbm"] or kwargs["disas"] or kwargs["raw_only_body"] and not (kwargs["header_info"] or kwargs["raw_only_header"]):
+        if kwargs["iter_widths"]:
+            sw, ew = kwargs["iter_widths"].split(":")
+            sw = int(sw)
+            ew = int(ew) if kwargs["pbm"] and kwargs["to_files"] else sw
+        else:
+            sw = int(kwargs["pbm_format"].split(":")[0])
+            ew = sw
+
+        for w in range(sw, ew+8, 8):
+            if kwargs["to_files"]:
+                try:
+                    if kwargs["pbm"] or kwargs["disas"] or kwargs["raw_only_body"] and not (kwargs["header_info"] or kwargs["raw_only_header"]):
+                        assert hasPayload(block)
+                    path = os.path.join(kwargs["to_files"], kwargs["fname_format"].format(dxe=0, blockid=i, width=w))
+                    f = open(path, "wb")  # TODO: dxe
+                except AssertionError as e:
+                    #print(repr(e))  # TODO
+                    continue
+
+                stdoutsave = sys.stdout
+                sys.stdout = f
+
+            if kwargs["pbm"]:
+                try:
                     assert hasPayload(block)
-                path = os.path.join(kwargs["to_files"], kwargs["fname_format"].format(dxe=0, blockid=i))
-                f = open(path, "wb")  # TODO: dxe
-            except AssertionError as e:
-                #print(repr(e))  # TODO
-                continue
+                    import PIL.Image
+                    import math
 
-            stdoutsave = sys.stdout
-            sys.stdout = f
+                    if kwargs["iter_widths"]:
+                        width, offset = w, kwargs["pbm_format"].split(":")[1]
+                    else:
+                        width, offset = kwargs["pbm_format"].split(":")
+                    width = int(width)
+                    offset = int(offset)
 
-        if kwargs["header_info"]:
-            pprintHeader(block, i)
+                    data = block.blockData.data[offset:]
 
-        if kwargs["disas"]:
-            try:
-                assert hasPayload(block)
-                if "OBJDUMP_PATH" in os.environ:
-                    objdumpPath = os.environ["OBJDUMP_PATH"]
-                else:
-                    objdumpPath = "blackfin-linux-uclibc-obdump"  # TODO: whats the difference between all the versions?
+                    height = int(math.ceil(((len(block.blockData.data) - offset) * 8) / float(width)))
+                    data += "\x00" * ((height*width/8) - (len(block.blockData.data) - offset))  # pad
 
-                objdumpDisasBlock(objdumpPath, block, decryptedBlobFile.name)
-            except AssertionError as e:
-                print(e)  # TODO
+                    img = PIL.Image.frombytes(mode="1", size=(width, height), data=data)
 
-        if kwargs["pbm"]:
-            try:
-                assert hasPayload(block)
-                import PIL.Image
-                import math
-                width, offset = kwargs["pbm_format"].split(":")
-                width = int(width)
-                offset = int(offset)
+                    vf = BytesIO()
+                    img.save(vf, format="ppm")
+                    vf.seek(0)
+                    sys.stdout.write(vf.read())
+                except AssertionError as e:
+                    print(e)  # TODO
 
-                data = block.blockData.data[offset:]
+            if kwargs["header_info"]:
+                pprintHeader(block, i)
 
-                height = int(math.ceil(((len(block.blockData.data) - offset) * 8) / float(width)))
-                data += "\x00" * ((height*width/8) - (len(block.blockData.data) - offset))  # pad
+            if kwargs["disas"]:
+                try:
+                    assert hasPayload(block)
+                    if "OBJDUMP_PATH" in os.environ:
+                        objdumpPath = os.environ["OBJDUMP_PATH"]
+                    else:
+                        objdumpPath = "blackfin-linux-uclibc-obdump"  # TODO: whats the difference between all the versions?
 
-                img = PIL.Image.frombytes(mode="1", size=(width, height), data=data)
+                    objdumpDisasBlock(objdumpPath, block, decryptedBlobFile.name)
+                except AssertionError as e:
+                    print(e)  # TODO
 
-                vf = BytesIO()
-                img.save(vf, format="ppm")
-                vf.seek(0)
-                sys.stdout.write(vf.read())
-            except AssertionError as e:
-                print(e)  # TODO
+            if kwargs["raw"]:  # TODO: make mutex
+                sys.stdout.write(block.blockHeader.headerBytes)
+                try:
+                    assert hasPayload(block)
+                    sys.stdout.write(block.blockData.data)
+                except AssertionError as e:
+                    print(e)  # TODO
+                sys.stdout.flush()
 
-        if kwargs["raw"]:  # TODO: make mutex
-            sys.stdout.write(block.blockHeader.headerBytes)
-            try:
-                assert hasPayload(block)
-                sys.stdout.write(block.blockData.data)
-            except AssertionError as e:
-                print(e)  # TODO
-            sys.stdout.flush()
+            if kwargs["raw_only_header"]:
+                sys.stdout.write(block.blockHeader.headerBytes)
+                sys.stdout.flush()
 
-        if kwargs["raw_only_header"]:
-            sys.stdout.write(block.blockHeader.headerBytes)
-            sys.stdout.flush()
-
-        if kwargs["raw_only_body"]:
-            try:
-                assert hasPayload(block)
-                sys.stdout.write(block.blockData.data)
-            except AssertionError as e:
-                print(e)  # TODO
-            sys.stdout.flush()
+            if kwargs["raw_only_body"]:
+                try:
+                    assert hasPayload(block)
+                    sys.stdout.write(block.blockData.data)
+                except AssertionError as e:
+                    print(e)  # TODO
+                sys.stdout.flush()
 
 
-        if len(blocks) != 1 and not kwargs["to_files"]:  # TODO: /stdout, binary?
-            print("-" * 90)
+            if len(blocks) != 1 and not kwargs["to_files"]:  # TODO: /stdout, binary?
+                print("-" * 90)
 
-        if kwargs["to_files"]:  # TODO: more proper wrapping
-            f.flush()
-            f.close()
-            sys.stdout = stdoutsave
+            if kwargs["to_files"]:  # TODO: more proper wrapping
+                f.flush()
+                f.close()
+                sys.stdout = stdoutsave
 
 
 
