@@ -79,7 +79,7 @@ def objdumpDisasBlock(objdumpPath, block, decryptedBlobPath):
     offset = block.blockHeader.offset
     len = block.blockHeader["BYTE COUNT"]
 
-    baseOffset = hdr["TARGET ADDRESS"]
+    baseOffset = hdr["TARGET ADDRESS"]-(offset+16)
     startOffset = baseOffset+offset+16
     stopOffset = baseOffset+offset+16+len
     command = [objdumpPath,
