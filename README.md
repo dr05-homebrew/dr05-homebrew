@@ -8,6 +8,20 @@ The omniscient etherpad: https://public.etherpad-mozilla.org/p/dr05reveng
 [Tascam DR-05]: http://tascam.com/product/dr-05/
 
 
+## Hardware overview
+
+* BF514, an [Analog Devices][adi] [blackfin] digital signal processor
+* 2 MiB of flash memory
+* 16 MiB of external RAM
+* a micro-SD slot
+* a [Cirrus Logic][cirrus] audio CODEC
+* a 128x64 pixel monochrome display with orange backlight
+
+[adi]: http://www.analog.com/en/index.html
+[blackfin]: http://www.analog.com/en/products/processors-dsp/blackfin.html
+[cirrus]: https://www.cirrus.com/
+
+
 ## External tools
 
 The following tools are not maintained in this repository, but may be useful
