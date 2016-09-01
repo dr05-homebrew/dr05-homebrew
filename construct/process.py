@@ -20,13 +20,14 @@ def output_binary(maybe_file, data):
     """If maybe_file is not None, write `data` into it and close it(!),
     otherwise print to stdout if it is not a terminal."""
     if maybe_file:
-        f.write(data)
-        f.close()
+        maybe_file.write(data)
+        maybe_file.close()
         return
     if sys.stdout.isatty():
         print("You requested dumping data to stdout which is a terminal.")
         print("I'm sorry Dave, I can't let you do that.")
-        print("If you really really want to, just use ./process.py [...] | cat")
+        print("You could just use --to-file=filename, you know...")
+        print("But if you really really insist, use ./process.py [...] | cat")
     else:
         sys.stdout.write(data)
         sys.stdout.flush()
