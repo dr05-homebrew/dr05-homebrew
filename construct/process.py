@@ -16,6 +16,21 @@ global blobParsed
 global firmwareParsed
 global decryptedBlobFile
 
+def output_binary(maybe_file, data):
+    """If maybe_file is not None, write `data` into it and close it(!),
+    otherwise print to stdout if it is not a terminal."""
+    if maybe_file:
+        f.write(data)
+        f.close()
+        return
+    if sys.stdout.isatty():
+        print("You requested dumping data to stdout which is a terminal.")
+        print("I'm sorry Dave, I can't let you do that.")
+        print("If you really really want to, just use ./process.py [...] | cat")
+    else:
+        sys.stdout.write(data)
+        sys.stdout.flush()
+
 ########
 @click.group()
 @click.argument('BLOB', nargs=1, type=click.File('rb'))
@@ -183,24 +198,12 @@ def dump_header():
 @click.option('--decrypt', is_flag=True)
 @click.option('--to-file', help='output to file instead of stdout', type=click.File('wb'))
 def dump_body(**kwargs):
-    if kwargs["to_file"]:
-        f = kwargs["to_file"]
-        stdoutsave = sys.stdout
-        sys.stdout = f
-
     if kwargs["decrypt"]:
         data = blobParsed.decryptedBody
     else:
         data = blobParsed.encryptedBody
 
-    sys.stdout.write(data)
-    sys.stdout.flush()
-
-    if kwargs["to_file"]:  # TODO: more proper wrapping
-        f.flush()
-        f.close()
-        sys.stdout = stdoutsave
-
+    output_binary(kwargs["to_file"], data)
 
 ########
 #patch
