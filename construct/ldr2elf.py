@@ -38,10 +38,13 @@ def get_dxe(fw, dxe_num):
         if header["BLOCK CODE"].BFLAG_FINAL:
             raise Exception("Reached FINAL @ 0x{:x} before finding requested DXE".format(offset))
         assert header["BLOCK CODE"].BFLAG_INIT
-        entrypoint = header["TARGET ADDRESS"]
-        arg = header["ARGUMENT"]
         offset += HEADER_SIZE
-    return entrypoint, fw[offset:]
+
+    dxe = fw[offset:]
+    header = blockHeader.parse(dxe)
+    assert header["BLOCK CODE"].BFLAG_FIRST
+    entrypoint = header["TARGET ADDRESS"]
+    return entrypoint, dxe
 
 
 def get_sections(dxe):
