@@ -1,0 +1,628 @@
+0xFFE00004|DMEM_CONTROL|L1 Data Memory Control Register|2-6
+0xFFE00300|DTEST_COMMAND|Data Test Command Register|2-7
+0xFFE03000|TCNTL|Core Timer Control Register|11-5
+0xFFE03004|TPERIOD|Core Timer Period Register|11-6
+0xFFE03008|TSCALE|Core Timer Scale Register|11-7
+0xFFE0300C|TCOUNT|Core Timer Count Register|11-6
+0xFFC00104|SYSCR|System Reset Configuration (SYSCR) Register|26-76
+0xFFC0010C|SIC_IMASK0|System Interrupt Mask (SIC_IMASK) Register|5-12
+0xFFC0014C|SIC_IMASK1|System Interrupt Mask (SIC_IMASK) Register|5-12
+0xFFC00110|SIC_IAR0|System Interrupt Assignment (SIC_IAR) Register|5-11
+0xFFC00114|SIC_IAR1|System Interrupt Assignment (SIC_IAR) Register|5-11
+0xFFC00118|SIC_IAR2|System Interrupt Assignment (SIC_IAR) Register|5-11
+0xFFC0011C|SIC_IAR3|System Interrupt Assignment (SIC_IAR) Register|5-11
+0xFFC00150|SIC_IAR4|System Interrupt Assignment (SIC_IAR) Register|5-11
+0xFFC00154|SIC_IAR5|System Interrupt Assignment (SIC_IAR) Register|5-11
+0xFFC00158|SIC_IAR6|System Interrupt Assignment (SIC_IAR) Register|5-11
+0xFFC0015C|SIC_IAR7|System Interrupt Assignment (SIC_IAR) Register|5-11
+0xFFC00120|SIC_ISR0|System Interrupt Status (SIC_ISR) Register|5-12
+0xFFC00160|SIC_ISR1|System Interrupt Status (SIC_ISR) Register|5-12
+0xFFC00124|SIC_IWR0|System Interrupt Wakeup-Enable (SIC_IWR) Register|5-12
+0xFFC00164|SIC_IWR1|System Interrupt Wakeup-Enable (SIC_IWR) Register|5-12
+0xFFC00B0C|DMA_TC_PER|DMA Traffic Control Counter Period Register|6-89
+0xFFC00B10|DMA_TC_CNT|DMA Traffic Control Counter Register|6-89
+0xFFC03300|HMDMA0_CONTROL|Handshake MDMA Control Registers|6-83
+0xFFC03304|HMDMA0_ECINIT|Handshake MDMA Initial Edge Count Registers|6-87
+0xFFC03308|HMDMA0_BCINIT|Handshake MDMA Initial Block Count Registers|6-84
+0xFFC0330C|HMDMA0_ECURGENT|Handshake MDMA Edge Count Urgent Registers|6-87
+0xFFC03310|HMDMA0_ECOVERFLOW|Handshake MDMA Edge Count Overflow Interrupt Registers|6-88
+0xFFC03314|HMDMA0_ECOUNT|Handshake MDMA Initial Edge Count Registers|6-87
+0xFFC03318|HMDMA0_BCOUNT|Handshake MDMA Current Block Count Registers|6-85
+0xFFC03340|HMDMA1_CONTROL|Handshake MDMA Control Registers|6-83
+0xFFC03344|HMDMA1_ECINIT|Handshake MDMA Initial Edge Count Registers|6-87
+0xFFC03348|HMDMA1_BCINIT|Handshake MDMA Initial Block Count Registers|6-84
+0xFFC0334C|HMDMA1_ECURGENT|Handshake MDMA Edge Count Urgent Registers|6-87
+0xFFC03350|HMDMA1_ECOVERFLOW|Handshake MDMA Edge Count Overflow Interrupt Registers|6-88
+0xFFC03354|HMDMA1_ECOUNT|Handshake MDMA Initial Edge Count Registers|6-87
+0xFFC03358|HMDMA1_BCOUNT|Handshake MDMA Current Block Count Registers|6-85
+0xFFC00A00|EBIU_AMGCTL|Asynchronous Memory Global Control Register|7-20
+0xFFC00A04|EBIU_AMBCTL0|Asynchronous Memory Bank Control 0 Register|7-21
+0xFFC00A08|EBIU_AMBCTL1|Asynchronous Memory Bank Control 1 Register|7-22
+0xFFC00A10|EBIU_SDGCTL|SDRAM Memory Global Control Register|7-67
+0xFFC00A14|EBIU_SDBCTL|SDRAM Memory Bank Control Register|7-63
+0xFFC00A18|EBIU_SDRRC|SDRAM Refresh Rate Control Register|7-60
+0xFFC00A1C|EBIU_SDSTAT|SDRAM Control Status Register|7-76
+0xFFC00700|PORTFIO|GPIO Data Registers|9-34
+0xFFC00704|PORTFIO_CLEAR|GPIO Clear Registers|9-35
+0xFFC00708|PORTFIO_SET|GPIO Set Registers|9-34
+0xFFC0070C|PORTFIO_TOGGLE|GPIO Toggle Registers|9-35
+0xFFC00710|PORTFIO_MASKA|GPIO Mask Interrupt A Registers|9-37
+0xFFC00714|PORTFIO_MASKA_CLEAR|GPIO Mask Interrupt A Clear Registers|9-41
+0xFFC00718|PORTFIO_MASKA_SET|GPIO Mask Interrupt A Set Registers|9-39
+0xFFC0071C|PORTFIO_MASKA_TOGGLE|GPIO Mask Interrupt A Toggle Registers|9-43
+0xFFC00720|PORTFIO_MASKB|GPIO Mask Interrupt B Registers|9-38
+0xFFC00724|PORTFIO_MASKB_CLEAR|GPIO Mask Interrupt B Clear Registers|9-42
+0xFFC00728|PORTFIO_MASKB_SET|GPIO Mask Interrupt B Set Registers|9-40
+0xFFC0072C|PORTFIO_MASKB_TOGGLE|GPIO Mask Interrupt B Toggle Registers|9-44
+0xFFC00730|PORTFIO_DIR|GPIO Direction Registers|9-33
+0xFFC00734|PORTFIO_POLAR|GPIO Polarity Registers|9-36
+0xFFC00738|PORTFIO_EDGE|Interrupt Sensitivity Registers|9-36
+0xFFC0073C|PORTFIO_BOTH|GPIO Set on Both Edges Registers|9-37
+0xFFC00740|PORTFIO_INEN|GPIO Input Enable Registers|9-33
+0xFFC01500|PORTGIO|GPIO Data Registers|9-34
+0xFFC01504|PORTGIO_CLEAR|GPIO Clear Registers|9-35
+0xFFC01508|PORTGIO_SET|GPIO Set Registers|9-34
+0xFFC0150C|PORTGIO_TOGGLE|GPIO Toggle Registers|9-35
+0xFFC01510|PORTGIO_MASKA|GPIO Mask Interrupt A Registers|9-37
+0xFFC01514|PORTGIO_MASKA_CLEAR|GPIO Mask Interrupt A Clear Registers|9-41
+0xFFC01518|PORTGIO_MASKA_SET|GPIO Mask Interrupt A Set Registers|9-39
+0xFFC0151C|PORTGIO_MASKA_TOGGLE|GPIO Mask Interrupt A Toggle Registers|9-43
+0xFFC01520|PORTGIO_MASKB|GPIO Mask Interrupt B Registers|9-38
+0xFFC01524|PORTGIO_MASKB_CLEAR|GPIO Mask Interrupt B Clear Registers|9-42
+0xFFC01528|PORTGIO_MASKB_SET|GPIO Mask Interrupt B Set Registers|9-40
+0xFFC0152C|PORTGIO_MASKB_TOGGLE|GPIO Mask Interrupt B Toggle Registers|9-44
+0xFFC01530|PORTGIO_DIR|GPIO Direction Registers|9-33
+0xFFC01534|PORTGIO_POLAR|GPIO Polarity Registers|9-36
+0xFFC01538|PORTGIO_EDGE|Interrupt Sensitivity Registers|9-36
+0xFFC0153C|PORTGIO_BOTH|GPIO Set on Both Edges Registers|9-37
+0xFFC01540|PORTGIO_INEN|GPIO Input Enable Registers|9-33
+0xFFC01700|PORTHIO|GPIO Data Registers|9-34
+0xFFC01704|PORTHIO_CLEAR|GPIO Clear Registers|9-35
+0xFFC01708|PORTHIO_SET|GPIO Set Registers|9-34
+0xFFC0170C|PORTHIO_TOGGLE|GPIO Toggle Registers|9-35
+0xFFC01710|PORTHIO_MASKA|GPIO Mask Interrupt A Registers|9-37
+0xFFC01714|PORTHIO_MASKA_CLEAR|GPIO Mask Interrupt A Clear Registers|9-41
+0xFFC01718|PORTHIO_MASKA_SET|GPIO Mask Interrupt A Set Registers|9-39
+0xFFC0171C|PORTHIO_MASKA_TOGGLE|GPIO Mask Interrupt A Toggle Registers|9-43
+0xFFC01720|PORTHIO_MASKB|GPIO Mask Interrupt B Registers|9-38
+0xFFC01724|PORTHIO_MASKB_CLEAR|GPIO Mask Interrupt B Clear Registers|9-42
+0xFFC01728|PORTHIO_MASKB_SET|GPIO Mask Interrupt B Set Registers|9-40
+0xFFC0172C|PORTHIO_MASKB_TOGGLE|GPIO Mask Interrupt B Toggle Registers|9-44
+0xFFC01730|PORTHIO_DIR|GPIO Direction Registers|9-33
+0xFFC01734|PORTHIO_POLAR|GPIO Polarity Registers|9-36
+0xFFC01738|PORTHIO_EDGE|Interrupt Sensitivity Registers|9-36
+0xFFC0173C|PORTHIO_BOTH|GPIO Set on Both Edges Registers|9-37
+0xFFC01740|PORTHIO_INEN|GPIO Input Enable Registers|9-33
+0xFFC03200|PORTF_FER|Function Enable Registers|9-32
+0xFFC03204|PORTG_FER|Function Enable Registers|9-32
+0xFFC03208|PORTH_FER|Function Enable Registers|9-32
+0xFFC03210|PORTF_MUX|Port F Multiplexer Control Register|9-30
+0xFFC03214|PORTG_MUX|Port F Multiplexer Control Register|9-30
+0xFFC03218|PORTH_MUX|Port F Multiplexer Control Register|9-30
+0xFFC03240|PORTF_HYSTERESIS|Port F Hysteresis Register|9-26
+0xFFC03244|PORTG_HYSTERESIS|Port G Hysteresis Register|9-27
+0xFFC03248|PORTH_HYSTERESIS|Port H Hysteresis Register|9-27
+0xFFC03280|NONGPIO_DRIVE|Non-GPIO Drive Strength Control Register|9-28
+0xFFC03288|NONGPIO_HYSTERESIS|Non-GPIO Hysteresis (NONGPIO_HYSTERESIS) Register|9-29
+0xFFC00600|TIMER0_CONFIG|Timer Configuration Register|10-41
+0xFFC00604|TIMER0_COUNTER|Timer Counter Register|10-42
+0xFFC00608|TIMER0_PERIOD|Timer Period Register|10-44
+0xFFC0060C|TIMER0_WIDTH|Timer Width Register|10-45
+0xFFC00610|TIMER1_CONFIG|Timer Configuration Register|10-41
+0xFFC00614|TIMER1_COUNTER|Timer Counter Register|10-42
+0xFFC00618|TIMER1_PERIOD|Timer Period Register|10-44
+0xFFC0061C|TIMER1_WIDTH|Timer Width Register|10-45
+0xFFC00620|TIMER2_CONFIG|Timer Configuration Register|10-41
+0xFFC00624|TIMER2_COUNTER|Timer Counter Register|10-42
+0xFFC00628|TIMER2_PERIOD|Timer Period Register|10-44
+0xFFC0062C|TIMER2_WIDTH|Timer Width Register|10-45
+0xFFC00630|TIMER3_CONFIG|Timer Configuration Register|10-41
+0xFFC00634|TIMER3_COUNTER|Timer Counter Register|10-42
+0xFFC00638|TIMER3_PERIOD|Timer Period Register|10-44
+0xFFC0063C|TIMER3_WIDTH|Timer Width Register|10-45
+0xFFC00640|TIMER4_CONFIG|Timer Configuration Register|10-41
+0xFFC00644|TIMER4_COUNTER|Timer Counter Register|10-42
+0xFFC00648|TIMER4_PERIOD|Timer Period Register|10-44
+0xFFC0064C|TIMER4_WIDTH|Timer Width Register|10-45
+0xFFC00650|TIMER5_CONFIG|Timer Configuration Register|10-41
+0xFFC00654|TIMER5_COUNTER|Timer Counter Register|10-42
+0xFFC00658|TIMER5_PERIOD|Timer Period Register|10-44
+0xFFC0065C|TIMER5_WIDTH|Timer Width Register|10-45
+0xFFC00660|TIMER6_CONFIG|Timer Configuration Register|10-41
+0xFFC00664|TIMER6_COUNTER|Timer Counter Register|10-42
+0xFFC00668|TIMER6_PERIOD|Timer Period Register|10-44
+0xFFC0066C|TIMER6_WIDTH|Timer Width Register|10-45
+0xFFC00670|TIMER7_CONFIG|Timer Configuration Register|10-41
+0xFFC00674|TIMER7_COUNTER|Timer Counter Register|10-42
+0xFFC00678|TIMER7_PERIOD|Timer Period Register|10-44
+0xFFC0067C|TIMER7_WIDTH|Timer Width Register|10-45
+0xFFC00680|TIMER_ENABLE|Timer Enable Register|10-37
+0xFFC00684|TIMER_DISABLE|Timer Disable Register|10-38
+0xFFC00688|TIMER_STATUS|Timer Status Register|10-40
+0xFFC00200|WDOG_CTL|Watchdog Control Register|12-8
+0xFFC00204|WDOG_CNT|Watchdog Count Register|12-6
+0xFFC00208|WDOG_STAT|Watchdog Status Register|12-7
+0xFFC03500|CNT_CONFIG|Counter Configuration Register|13-20
+0xFFC03504|CNT_IMASK|Counter Interrupt Mask Register|13-21
+0xFFC03508|CNT_STATUS|Counter Status Register|13-22
+0xFFC0350C|CNT_COMMAND|Counter Command Register|13-24
+0xFFC03510|CNT_DEBOUNCE|Counter Debounce Register|13-25
+0xFFC03514|CNT_COUNTER|Counter Count Value Register|13-26
+0xFFC03518|CNT_MAX|Counter Maximal Count Register|13-27
+0xFFC0351C|CNT_MIN|Counter Minimal Count Register|13-27
+0xFFC00300|RTC_STAT|RTC Status Register|24-21
+0xFFC00304|RTC_ICTL|RTC Interrupt Control Register|24-21
+0xFFC00308|RTC_ISTAT|RTC Status Register|24-21
+0xFFC0030C|RTC_SWCNT|RTC Stopwatch Count Register|24-22
+0xFFC00310|RTC_ALARM|RTC Alarm Register|24-23
+0xFFC00314|RTC_PREN|RTC Prescaler Enable Register|24-23
+0xFFC0360C|OTP_TIMING|OTP_TIMING Register|3-14
+0xFFC03620|SECURE_SYSSWT|Secure System Switch Register, Bits 15:0|25-48
+0xFFC03624|SECURE_CONTROL|Secure Control Register|25-54
+0xFFC03628|SECURE_STATUS|Secure Status Register|25-56
+0xFFC03680|OTP_DATA0|OTP_DATAx Registers|3-3
+0xFFC03684|OTP_DATA1|OTP_DATAx Registers|3-3
+0xFFC03688|OTP_DATA2|OTP_DATAx Registers|3-3
+0xFFC0368C|OTP_DATA3|OTP_DATAx Registers|3-3
+0xFFC00000|PLL_CTL|PLL Control Register|8-21
+0xFFC00004|PLL_DIV|PLL Divide Register|8-21
+0xFFC00008|VR_CTL|Voltage Regulator Control Register|8-23
+0xFFC0000C|PLL_STAT|PLL Status Register|8-22
+0xFFC00010|PLL_LOCKCNT|PLL Lock Count Register|8-22
+0xFFC03000|EMAC_OPMODE|EMAC_OPMODE Register|22-60
+0xFFC03004|EMAC_ADDRLO|EMAC_ADDRLO Register|22-67
+0xFFC03008|EMAC_ADDRHI|EMAC_ADDRHI Register|22-68
+0xFFC0300C|EMAC_HASHLO|EMAC_HASHLO Register|22-69
+0xFFC03010|EMAC_HASHHI|EMAC_HASHHI Register|22-70
+0xFFC03014|EMAC_STAADD|EMAC_STAADD Register|22-72
+0xFFC03018|EMAC_STADAT|EMAC_STADAT Register|22-74
+0xFFC0301C|EMAC_FLC|EMAC_FLC Register|22-75
+0xFFC03020|EMAC_VLAN1|EMAC_VLAN1 Register|22-77
+0xFFC03024|EMAC_VLAN2|EMAC_VLAN2 Register|22-77
+0xFFC0302C|EMAC_WKUP_CTL|EMAC_WKUP_CTL Register|22-78
+0xFFC03030|EMAC_WKUP_FFMSK0|EMAC_WKUP_FFMSK0 Register|22-81
+0xFFC03034|EMAC_WKUP_FFMSK1|EMAC_WKUP_FFMSK1 Register|22-82
+0xFFC03038|EMAC_WKUP_FFMSK2|EMAC_WKUP_FFMSK2 Register|22-83
+0xFFC0303C|EMAC_WKUP_FFMSK3|EMAC_WKUP_FFMSK3 Register|22-84
+0xFFC03040|EMAC_WKUP_FFCMD|EMAC_WKUP_FFCMD Register|22-85
+0xFFC03044|EMAC_WKUP_FFOFF|EMAC_WKUP_FFOFF Register|22-87
+0xFFC03048|EMAC_WKUP_FFCRC01|EMAC_WKUP_FFCRC0 Register|22-88
+0xFFC0304C|EMAC_WKUP_FFCRC23|EMAC_WKUP_FFCRC1 Register|22-88
+0xFFC03060|EMAC_SYSCTL|EMAC_SYSCTL Register|22-89
+0xFFC03064|EMAC_SYSTAT|EMAC_SYSTAT Register|22-91
+0xFFC03068|EMAC_RX_STAT|EMAC_RX_STAT Register|22-94
+0xFFC0306C|EMAC_RX_STKY|EMAC_RX_STKY Register|22-99
+0xFFC03070|EMAC_RX_IRQE|EMAC_RX_IRQE Register|22-104
+0xFFC03074|EMAC_TX_STAT|EMAC_TX_STAT Register|22-105
+0xFFC03078|EMAC_TX_STKY|EMAC_TX_STKY Register|22-109
+0xFFC0307C|EMAC_TX_IRQE|EMAC_TX_IRQE Register|22-112
+0xFFC03080|EMAC_MMC_CTL|EMAC_MMC_CTL Register|22-119
+0xFFC03084|EMAC_MMC_RIRQS|EMAC_MMC_RIRQS Register|22-113
+0xFFC03088|EMAC_MMC_RIRQE|EMAC_MMC_RIRQE Register|22-115
+0xFFC0308C|EMAC_MMC_TIRQS|EMAC_MMC_TIRQS Register|22-116
+0xFFC03090|EMAC_MMC_TIRQE|EMAC_MMC_TIRQE Register|22-118
+0xFFC03100|EMAC_RXC_OK|MAC Management Counter Registers|22-53
+0xFFC03104|EMAC_RXC_FCS|MAC Management Counter Registers|22-53
+0xFFC03108|EMAC_RXC_ALIGN|MAC Management Counter Registers|22-53
+0xFFC0310C|EMAC_RXC_OCTET|MAC Management Counter Registers|22-53
+0xFFC03110|EMAC_RXC_DMAOVF|MAC Management Counter Registers|22-53
+0xFFC03114|EMAC_RXC_UNICST|MAC Management Counter Registers|22-53
+0xFFC03118|EMAC_RXC_MULTI|MAC Management Counter Registers|22-53
+0xFFC0311C|EMAC_RXC_BROAD|MAC Management Counter Registers|22-53
+0xFFC03120|EMAC_RXC_LNERRI|MAC Management Counter Registers|22-53
+0xFFC03124|EMAC_RXC_LNERRO|MAC Management Counter Registers|22-53
+0xFFC03128|EMAC_RXC_LONG|MAC Management Counter Registers|22-53
+0xFFC0312C|EMAC_RXC_MACCTL|MAC Management Counter Registers|22-53
+0xFFC03130|EMAC_RXC_OPCODE|MAC Management Counter Registers|22-53
+0xFFC03134|EMAC_RXC_PAUSE|MAC Management Counter Registers|22-53
+0xFFC03138|EMAC_RXC_ALLFRM|MAC Management Counter Registers|22-53
+0xFFC0313C|EMAC_RXC_ALLOCT|MAC Management Counter Registers|22-53
+0xFFC03140|EMAC_RXC_TYPED|MAC Management Counter Registers|22-53
+0xFFC03144|EMAC_RXC_SHORT|MAC Management Counter Registers|22-53
+0xFFC03148|EMAC_RXC_EQ64|MAC Management Counter Registers|22-53
+0xFFC0314C|EMAC_RXC_LT128|MAC Management Counter Registers|22-53
+0xFFC03150|EMAC_RXC_LT256|MAC Management Counter Registers|22-53
+0xFFC03154|EMAC_RXC_LT512|MAC Management Counter Registers|22-53
+0xFFC03158|EMAC_RXC_LT1024|MAC Management Counter Registers|22-53
+0xFFC0315C|EMAC_RXC_GE1024|MAC Management Counter Registers|22-53
+0xFFC03180|EMAC_TXC_OK|MAC Management Counter Registers|22-53
+0xFFC03184|EMAC_TXC_1COL|MAC Management Counter Registers|22-53
+0xFFC03188|EMAC_TXC_GT1COL|MAC Management Counter Registers|22-53
+0xFFC0318C|EMAC_TXC_OCTET|MAC Management Counter Registers|22-53
+0xFFC03190|EMAC_TXC_DEFER|MAC Management Counter Registers|22-53
+0xFFC03194|EMAC_TXC_LATECL|MAC Management Counter Registers|22-53
+0xFFC03198|EMAC_TXC_XS_COL|MAC Management Counter Registers|22-53
+0xFFC0319C|EMAC_TXC_DMAUND|MAC Management Counter Registers|22-53
+0xFFC031A0|EMAC_TXC_CRSERR|MAC Management Counter Registers|22-53
+0xFFC031A4|EMAC_TXC_UNICST|MAC Management Counter Registers|22-53
+0xFFC031A8|EMAC_TXC_MULTI|MAC Management Counter Registers|22-53
+0xFFC031AC|EMAC_TXC_BROAD|MAC Management Counter Registers|22-53
+0xFFC031B0|EMAC_TXC_ES_DFR|MAC Management Counter Registers|22-53
+0xFFC031B4|EMAC_TXC_MACCTL|MAC Management Counter Registers|22-53
+0xFFC031B8|EMAC_TXC_ALLFRM|MAC Management Counter Registers|22-53
+0xFFC031BC|EMAC_TXC_ALLOCT|MAC Management Counter Registers|22-53
+0xFFC031C0|EMAC_TXC_EQ64|MAC Management Counter Registers|22-53
+0xFFC031C4|EMAC_TXC_LT128|MAC Management Counter Registers|22-53
+0xFFC031C8|EMAC_TXC_LT254|MAC Management Counter Registers|22-53
+0xFFC031CC|EMAC_TXC_LT512|MAC Management Counter Registers|22-53
+0xFFC031D0|EMAC_TXC_LT1024|MAC Management Counter Registers|22-53
+0xFFC031D4|EMAC_TXC_GE1024|MAC Management Counter Registers|22-53
+0xFFC031D8|EMAC_TXC_ABORT|MAC Management Counter Registers|22-53
+0xFFC030A0|EMAC_PTP_CTL|Control Register|23-13
+0xFFC030A4|EMAC_PTP_IE|Interrupt Enable Register|23-16
+0xFFC030A8|EMAC_PTP_ISTAT|Interrupt Status Register|23-18
+0xFFC030AC|EMAC_PTP_FOFF|Message Filter Offset Register|23-20
+0xFFC030B0|EMAC_PTP_FV1|Message Filter Value Register 1|23-21
+0xFFC030B4|EMAC_PTP_FV2|Message Filter Value Register 2|23-22
+0xFFC030B8|EMAC_PTP_FV3|Message Filter Value Register 3|23-23
+0xFFC030BC|EMAC_PTP_ADDEND|Addend Register|23-24
+0xFFC030C0|EMAC_PTP_ACCR|Accumulator Register|23-25
+0xFFC030C4|EMAC_PTP_OFFSET|Time Offset Register|23-26
+0xFFC030C8|EMAC_PTP_TIMELO|Local Clock Time Low Register|23-27
+0xFFC030CC|EMAC_PTP_TIMEHI|Local Clock Time High Register|23-28
+0xFFC030D0|EMAC_PTP_RXSNAPLO|Receive Snapshot Low Register|23-29
+0xFFC030D4|EMAC_PTP_RXSNAPHI|Receive Snapshot High Register|23-30
+0xFFC030D8|EMAC_PTP_TXSNAPLO|Transmit Snapshot Low Register|23-31
+0xFFC030DC|EMAC_PTP_TXSNAPHI|Transmit Snapshot High Register|23-32
+0xFFC030E0|EMAC_PTP_ALARMLO|Target Alarm Time Low Register|23-33
+0xFFC030E4|EMAC_PTP_ALARMHI|Target Alarm Time High Register|23-34
+0xFFC030E8|EMAC_PTP_ID_OFF|Source ID Offset Register|23-34
+0xFFC030EC|EMAC_PTP_ID_SNAP|Source ID Snapshot Register|23-35
+0xFFC030F0|EMAC_PTP_PPS_STARTLO|PPS Start Low Register|23-36
+0xFFC030F4|EMAC_PTP_PPS_STARTHI|PSS Start High Register|23-37
+0xFFC030F8|EMAC_PTP_PPS_PERIOD|PSS Period Register|23-38
+0xFFC01000|PPI_CONTROL|PPI Control Register|20-26
+0xFFC01004|PPI_STATUS|PPI Status Register|20-30
+0xFFC01008|PPI_COUNT|PPI Transfer Count Register|20-33
+0xFFC0100C|PPI_DELAY|PPI Delay Count Register|20-32
+0xFFC01010|PPI_FRAME|PPI Lines Per Frame Register|20-34
+0xFFC00500|SPI0_CTL|SPI Control Register|17-37
+0xFFC00504|SPI0_FLG|SPI Flag Register (example with 7 slave selects)|17-38
+0xFFC00508|SPI0_STAT|SPI Status Register|17-40
+0xFFC0050C|SPI0_TDBR|SPI Transmit Data Buffer Register|17-43
+0xFFC00510|SPI0_RDBR|SPI Receive Data Buffer Register|17-44
+0xFFC00514|SPI0_BAUD|SPI Baud Rate Register|17-35
+0xFFC00518|SPI0_SHADOW|SPI RDBR Shadow Register|17-44
+0xFFC03400|SPI1_CTL|SPI Control Register|17-37
+0xFFC03404|SPI1_FLG|SPI Flag Register (example with 7 slave selects)|17-38
+0xFFC03408|SPI1_STAT|SPI Status Register|17-40
+0xFFC0340C|SPI1_TDBR|SPI Transmit Data Buffer Register|17-43
+0xFFC03410|SPI1_RDBR|SPI Receive Data Buffer Register|17-44
+0xFFC03414|SPI1_BAUD|SPI Baud Rate Register|17-35
+0xFFC03418|SPI1_SHADOW|SPI RDBR Shadow Register|17-44
+0xFFC00800|SPORT0_TCR1|SPORT Transmit Configuration 1 Register|19-48
+0xFFC00804|SPORT0_TCR2|SPORT Transmit Configuration 2 Register|19-49
+0xFFC00808|SPORT0_TCLKDIV|SPORT Transmit Serial Clock Divider Register|19-63
+0xFFC0080C|SPORT0_TFSDIV|SPORT Transmit Frame Sync Divider Register|19-64
+0xFFC00810|SPORT0_TX|SPORT Transmit Data Register|19-58
+0xFFC00818|SPORT0_RX|SPORT Receive Data Register|19-60
+0xFFC00820|SPORT0_RCR1|SPORT Receive Configuration 1 Register|19-53
+0xFFC00824|SPORT0_RCR2|SPORT Receive Configuration 2 Register|19-54
+0xFFC00828|SPORT0_RCLKDIV|SPORT Receive Serial Clock Divider Register|19-63
+0xFFC0082C|SPORT0_RFSDIV|SPORT Receive Frame Sync Divider Register|19-64
+0xFFC00830|SPORT0_STAT|SPORT Status Register|19-61
+0xFFC00834|SPORT0_CHNL|SPORT Current Channel Register|19-66
+0xFFC00838|SPORT0_MCMC1|SPORT Multichannel Configuration Register 1|19-65
+0xFFC0083C|SPORT0_MCMC2|SPORT Multichannel Configuration Register 2|19-65
+0xFFC00840|SPORT0_MTCS0|SPORT Multichannel Transmit Select Registers|19-68
+0xFFC00844|SPORT0_MTCS1|SPORT Multichannel Transmit Select Registers|19-68
+0xFFC00848|SPORT0_MTCS2|SPORT Multichannel Transmit Select Registers|19-68
+0xFFC0084C|SPORT0_MTCS3|SPORT Multichannel Transmit Select Registers|19-68
+0xFFC00850|SPORT0_MRCS0|SPORT Multichannel Receive Select Registers|19-67
+0xFFC00854|SPORT0_MRCS1|SPORT Multichannel Receive Select Registers|19-67
+0xFFC00858|SPORT0_MRCS2|SPORT Multichannel Receive Select Registers|19-67
+0xFFC0085C|SPORT0_MRCS3|SPORT Multichannel Receive Select Registers|19-67
+0xFFC00900|SPORT1_TCR1|SPORT Transmit Configuration 1 Register|19-48
+0xFFC00904|SPORT1_TCR2|SPORT Transmit Configuration 2 Register|19-49
+0xFFC00908|SPORT1_TCLKDIV|SPORT Transmit Serial Clock Divider Register|19-63
+0xFFC0090C|SPORT1_TFSDIV|SPORT Transmit Frame Sync Divider Register|19-64
+0xFFC00910|SPORT1_TX|SPORT Transmit Data Register|19-58
+0xFFC00918|SPORT1_RX|SPORT Receive Data Register|19-60
+0xFFC00920|SPORT1_RCR1|SPORT Receive Configuration 1 Register|19-53
+0xFFC00924|SPORT1_RCR2|SPORT Receive Configuration 2 Register|19-54
+0xFFC00928|SPORT1_RCLKDIV|SPORT Receive Serial Clock Divider Register|19-63
+0xFFC0092C|SPORT1_RFSDIV|SPORT Receive Frame Sync Divider Register|19-64
+0xFFC00930|SPORT1_STAT|SPORT Status Register|19-61
+0xFFC00934|SPORT1_CHNL|SPORT Current Channel Register|19-66
+0xFFC00938|SPORT1_MCMC1|SPORT Multichannel Configuration Register 1|19-65
+0xFFC0093C|SPORT1_MCMC2|SPORT Multichannel Configuration Register 2|19-65
+0xFFC00940|SPORT1_MTCS0|SPORT Multichannel Transmit Select Registers|19-68
+0xFFC00944|SPORT1_MTCS1|SPORT Multichannel Transmit Select Registers|19-68
+0xFFC00948|SPORT1_MTCS2|SPORT Multichannel Transmit Select Registers|19-68
+0xFFC0094C|SPORT1_MTCS3|SPORT Multichannel Transmit Select Registers|19-68
+0xFFC00950|SPORT1_MRCS0|SPORT Multichannel Receive Select Registers|19-67
+0xFFC00954|SPORT1_MRCS1|SPORT Multichannel Receive Select Registers|19-67
+0xFFC00958|SPORT1_MRCS2|SPORT Multichannel Receive Select Registers|19-67
+0xFFC0095C|SPORT1_MRCS3|SPORT Multichannel Receive Select Registers|19-67
+0xFFC00400|UART0_THR|UART Transmit Holding Register|15-26
+0xFFC00400|UART0_RBR|UART Receive Buffer Register|15-26
+0xFFC00400|UART0_DLL|UART Divisor Latch Registers|15-30
+0xFFC00404|UART0_DLH|UART Divisor Latch Registers|15-30
+0xFFC00404|UART0_IER|UART Interrupt Enable Register|15-27
+0xFFC00408|UART0_IIR|UART Interrupt Identification Register|15-29
+0xFFC0040C|UART0_LCR|UART Line Control Register|15-21
+0xFFC00410|UART0_MCR|UART Modem Control Registers|15-23
+0xFFC00414|UART0_LSR|UART Line Status Register|15-24
+0xFFC0041C|UART0_SCR|UART Scratch Register|15-31
+0xFFC00424|UART0_GCTL|UART Global Control Register|15-31
+0xFFC02000|UART1_THR|UART Transmit Holding Register|15-26
+0xFFC02000|UART1_RBR|UART Receive Buffer Register|15-26
+0xFFC02000|UART1_DLL|UART Divisor Latch Registers|15-30
+0xFFC02004|UART1_DLH|UART Divisor Latch Registers|15-30
+0xFFC02004|UART1_IER|UART Interrupt Enable Register|15-27
+0xFFC02008|UART1_IIR|UART Interrupt Identification Register|15-29
+0xFFC0200C|UART1_LCR|UART Line Control Register|15-21
+0xFFC02010|UART1_MCR|UART Modem Control Registers|15-23
+0xFFC02014|UART1_LSR|UART Line Status Register|15-24
+0xFFC0201C|UART1_SCR|UART Scratch Register|15-31
+0xFFC02024|UART1_GCTL|UART Global Control Register|15-31
+0xFFC03700|PWM_CTRL|PWM Control Register|14-39
+0xFFC03704|PWM_STAT|PWM_STAT Register|14-41
+0xFFC03708|PWM_TM|PWM_TM Register|14-42
+0xFFC0370C|PWM_DT|PWM Dead Time Register|14-43
+0xFFC03710|PWM_GATE|PWM Chopping Control Register|14-44
+0xFFC03714|PWM_CHA|PWM_CHA Register|14-45
+0xFFC03718|PWM_CHB|PWM_CHB Register|14-45
+0xFFC0371C|PWM_CHC|PWM_CHC Register|14-45
+0xFFC03720|PWM_SEG|PWM_SEG Register|14-46
+0xFFC03724|PWM_SYNCWT|PWM Sync Pulse Width Control Register|14-48
+0xFFC03728|PWM_CHAL|PWM Channel AL Duty Control Register|14-49 0xFCC0372C PWM_CHBL
+0xFFC03730|PWM_CHCL|PWM_CHCL Register|14-50
+0xFFC03734|PWM_LSI|PWM Low Side Invert Register|14-50
+0xFFC03738|PWM_STAT2|PWM_STAT2 Register|14-51
+0xFFC03800|RSI_PWR_CONTROL|RSI Power Control Register|21-55
+0xFFC03804|RSI_CLK_CONTROL|RSI Clock Control Register|21-57
+0xFFC03808|RSI_ARGUMENT|RSI Argument Register|21-58
+0xFFC0380C|RSI_COMMAND|RSI Command Register|21-59
+0xFFC03810|RSI_RESP_CMD|RSI Response Command Register|21-60
+0xFFC03814|RSI_RESPONSE0|RSI Response Registers|21-61
+0xFFC03818|RSI_RESPONSE1|RSI Response Registers|21-61
+0xFFC0381C|RSI_RESPONSE2|RSI Response Registers|21-61
+0xFFC03820|RSI_RESPONSE3|RSI Response Registers|21-61
+0xFFC03824|RSI_DATA_TIMER|RSI Data Timer Register|21-62
+0xFFC03828|RSI_DATA_LGTH|RSI Data Length Register|21-63
+0xFFC0382C|RSI_DATA_CONTROL|RSI Data Control Register|21-64
+0xFFC03830|RSI_DATA_CNT|RSI Data Counter Register|21-65
+0xFFC03834|RSI_STATUS|RSI Status Register|21-67
+0xFFC03838|RSI_STATUSCL|RSI Status Clear Register|21-70
+0xFFC0383C|RSI_MASK0|RSI Interrupt Mask Registers|21-72
+0xFFC03840|RSI_MASK1|RSI Interrupt Mask Registers|21-72
+0xFFC03848|RSI_FIFO_CNT|RSI FIFO Counter Register|21-75
+0xFFC0384C|RSI_CEATA_CONTROL|RSI CE_ATA Control Register|21-76
+0xFFC03880|RSI_FIFO|RSI Data FIFO Register|21-76
+0xFFC038C0|RSI_ESTAT|RSI Exception Status Register|21-77
+0xFFC038C4|RSI_EMASK|RSI Exception Mask Register|21-78
+0xFFC038C8|RSI_CONFIG|RSI Configuration Register|21-80
+0xFFC038CC|RSI_RD_WAIT_EN|RSI Read Wait Enable Register|21-81
+0xFFC03FE0|RSI_PID0|RSI Peripheral ID Registers|21-82
+0xFFC03FE4|RSI_PID1|RSI Peripheral ID Registers|21-82
+0xFFC03FE8|RSI_PID2|RSI Peripheral ID Registers|21-82
+0xFFC03FEC|RSI_PID3|RSI Peripheral ID Registers|21-82
+0xFFC03FF0|RSI_PID4|RSI Peripheral ID Registers|21-82
+0xFFC03FF4|RSI_PID5|RSI Peripheral ID Registers|21-82
+0xFFC03FF8|RSI_PID6|RSI Peripheral ID Registers|21-82
+0xFFC03FFC|RSI_PID7|RSI Peripheral ID Registers|21-82
+0xFFC01400|TWI_CLKDIV|SCL Clock Divider Register|16-28
+0xFFC01404|TWI_CONTROL|TWI Control Register|16-27
+0xFFC01408|TWI_SLAVE_CTL|TWI Slave Mode Control Register|16-28
+0xFFC0140C|TWI_SLAVE_STAT|TWI Slave Mode Status Register|16-30
+0xFFC01410|TWI_SLAVE_ADDR|TWI Slave Mode Address Register|16-30
+0xFFC01414|TWI_MASTER_CTL|TWI Master Mode Control Register|16-32
+0xFFC01418|TWI_MASTER_STAT|TWI Master Mode Status Register|16-35
+0xFFC0141C|TWI_MASTER_ADDR|TWI Master Mode Address Register|16-34
+0xFFC01420|TWI_INT_STAT|TWI Interrupt Status Register|16-42
+0xFFC01424|TWI_INT_MASK|TWI Interrupt Mask Register|16-42
+0xFFC01428|TWI_FIFO_CTL|TWI FIFO Control Register|16-38
+0xFFC0142C|TWI_FIFO_STAT|TWI FIFO Status Register|16-40
+0xFFC01480|TWI_XMT_DATA8|TWI FIFO Transmit Data Single Byte Register|16-45
+0xFFC01484|TWI_XMT_DATA16|TWI FIFO Transmit Data Double Byte Regis- ter|16-46
+0xFFC01488|TWI_RCV_DATA8|TWI FIFO Receive Data Single Byte Register|16-47
+0xFFC0148C|TWI_RCV_DATA16|TWI FIFO Receive Data Double Byte Register|16-48
+0xFFC0C00|DMA0_NEXT_DESC_PTR|DMA Next Descriptor Pointer Registers|6-81
+0xFFC0C04|DMA0_START_ADDR|DMA Start Address Registers|6-74
+0xFFC0C08|DMA0_CONFIG|DMA Configuration Registers|6-67
+0xFFC0C10|DMA0_X_COUNT|DMA Inner Loop Count Registers|6-75
+0xFFC0C14|DMA0_X_MODIFY|DMA Inner Loop Address Increment Registers|6-77
+0xFFC0C18|DMA0_Y_COUNT|DMA Outer Loop Count Registers|6-78
+0xFFC0C1C|DMA0_Y_MODIFY|DMA Outer Loop Address Increment Registers|6-80
+0xFFC0C20|DMA0_CURR_DESC_PTR|DMA Current Descriptor Pointer Registers|6-82
+0xFFC0C24|DMA0_CURR_ADDR|DMA Current Address Registers|6-75
+0xFFC0C28|DMA0_IRQ_STATUS|DMA Interrupt Status Registers|6-72
+0xFFC0C2C|DMA0_PERIPHERAL_MAP|DMA Peripheral Map Registers|6-66
+0xFFC0C30|DMA0_CURR_X_COUNT|DMA Current Inner Loop Count Registers|6-76
+0xFFC0C38|DMA0_CURR_Y_COUNT|DMA Current Outer Loop Count Registers|6-79
+0xFFC0C40|DMA1_NEXT_DESC_PTR|DMA Next Descriptor Pointer Registers|6-81
+0xFFC0C44|DMA1_START_ADDR|DMA Start Address Registers|6-74
+0xFFC0C48|DMA1_CONFIG|DMA Configuration Registers|6-67
+0xFFC0C50|DMA1_X_COUNT|DMA Inner Loop Count Registers|6-75
+0xFFC0C54|DMA1_X_MODIFY|DMA Inner Loop Address Increment Registers|6-77
+0xFFC0C58|DMA1_Y_COUNT|DMA Outer Loop Count Registers|6-78
+0xFFC0C5C|DMA1_Y_MODIFY|DMA Outer Loop Address Increment Registers|6-80
+0xFFC0C60|DMA1_CURR_DESC_PTR|DMA Current Descriptor Pointer Registers|6-82
+0xFFC0C64|DMA1_CURR_ADDR|DMA Current Address Registers|6-75
+0xFFC0C68|DMA1_IRQ_STATUS|DMA Interrupt Status Registers|6-72
+0xFFC0C6C|DMA1_PERIPHERAL_MAP|DMA Peripheral Map Registers|6-66
+0xFFC0C70|DMA1_CURR_X_COUNT|DMA Current Inner Loop Count Registers|6-76
+0xFFC0C78|DMA1_CURR_Y_COUNT|DMA Current Outer Loop Count Registers|6-79
+0xFFC0C80|DMA2_NEXT_DESC_PTR|DMA Next Descriptor Pointer Registers|6-81
+0xFFC0C84|DMA2_START_ADDR|DMA Start Address Registers|6-74
+0xFFC0C88|DMA2_CONFIG|DMA Configuration Registers|6-67
+0xFFC0C90|DMA2_X_COUNT|DMA Inner Loop Count Registers|6-75
+0xFFC0C94|DMA2_X_MODIFY|DMA Inner Loop Address Increment Registers|6-77
+0xFFC0C98|DMA2_Y_COUNT|DMA Outer Loop Count Registers|6-78
+0xFFC0C9C|DMA2_Y_MODIFY|DMA Outer Loop Address Increment Registers|6-80
+0xFFC0CA0|DMA2_CURR_DESC_PTR|DMA Current Descriptor Pointer Registers|6-82
+0xFFC0CA4|DMA2_CURR_ADDR|DMA Current Address Registers|6-75
+0xFFC0CA8|DMA2_IRQ_STATUS|DMA Interrupt Status Registers|6-72
+0xFFC0CAC|DMA2_PERIPHERAL_MAP|DMA Peripheral Map Registers|6-66
+0xFFC0CB0|DMA2_CURR_X_COUNT|DMA Current Inner Loop Count Registers|6-76
+0xFFC0CB8|DMA2_CURR_Y_COUNT|DMA Current Outer Loop Count Registers|6-79
+0xFFC0CC0|DMA3_NEXT_DESC_PTR|DMA Next Descriptor Pointer Registers|6-81
+0xFFC0CC4|DMA3_START_ADDR|DMA Start Address Registers|6-74
+0xFFC0CC8|DMA3_CONFIG|DMA Configuration Registers|6-67
+0xFFC0CD0|DMA3_X_COUNT|DMA Inner Loop Count Registers|6-75
+0xFFC0CD4|DMA3_X_MODIFY|DMA Inner Loop Address Increment Registers|6-77
+0xFFC0CD8|DMA3_Y_COUNT|DMA Outer Loop Count Registers|6-78
+0xFFC0CDC|DMA3_Y_MODIFY|DMA Outer Loop Address Increment Registers|6-80
+0xFFC0CE0|DMA3_CURR_DESC_PTR|DMA Current Descriptor Pointer Registers|6-82
+0xFFC0CE4|DMA3_CURR_ADDR|DMA Current Address Registers|6-75
+0xFFC0CE8|DMA3_IRQ_STATUS|DMA Interrupt Status Registers|6-72
+0xFFC0CEC|DMA3_PERIPHERAL_MAP|DMA Peripheral Map Registers|6-66
+0xFFC0CF0|DMA3_CURR_X_COUNT|DMA Current Inner Loop Count Registers|6-76
+0xFFC0CF8|DMA3_CURR_Y_COUNT|DMA Current Outer Loop Count Registers|6-79
+0xFFC0D00|DMA4_NEXT_DESC_PTR|DMA Next Descriptor Pointer Registers|6-81
+0xFFC0D04|DMA4_START_ADDR|DMA Start Address Registers|6-74
+0xFFC0D08|DMA4_CONFIG|DMA Configuration Registers|6-67
+0xFFC0D10|DMA4_X_COUNT|DMA Inner Loop Count Registers|6-75
+0xFFC0D14|DMA4_X_MODIFY|DMA Inner Loop Address Increment Registers|6-77
+0xFFC0D18|DMA4_Y_COUNT|DMA Outer Loop Count Registers|6-78
+0xFFC0D1C|DMA4_Y_MODIFY|DMA Outer Loop Address Increment Registers|6-80
+0xFFC0D20|DMA4_CURR_DESC_PTR|DMA Current Descriptor Pointer Registers|6-82
+0xFFC0D24|DMA4_CURR_ADDR|DMA Current Address Registers|6-75
+0xFFC0D28|DMA4_IRQ_STATUS|DMA Interrupt Status Registers|6-72
+0xFFC0D2C|DMA4_PERIPHERAL_MAP|DMA Peripheral Map Registers|6-66
+0xFFC0D30|DMA4_CURR_X_COUNT|DMA Current Inner Loop Count Registers|6-76
+0xFFC0D38|DMA4_CURR_Y_COUNT|DMA Current Outer Loop Count Registers|6-79
+0xFFC0D40|DMA5_NEXT_DESC_PTR|DMA Next Descriptor Pointer Registers|6-81
+0xFFC0D44|DMA5_START_ADDR|DMA Start Address Registers|6-74
+0xFFC0D48|DMA5_CONFIG|DMA Configuration Registers|6-67
+0xFFC0D50|DMA5_X_COUNT|DMA Inner Loop Count Registers|6-75
+0xFFC0D54|DMA5_X_MODIFY|DMA Inner Loop Address Increment Registers|6-77
+0xFFC0D58|DMA5_Y_COUNT|DMA Outer Loop Count Registers|6-78
+0xFFC0D5C|DMA5_Y_MODIFY|DMA Outer Loop Address Increment Registers|6-80
+0xFFC0D60|DMA5_CURR_DESC_PTR|DMA Current Descriptor Pointer Registers|6-82
+0xFFC0D64|DMA5_CURR_ADDR|DMA Current Address Registers|6-75
+0xFFC0D68|DMA5_IRQ_STATUS|DMA Interrupt Status Registers|6-72
+0xFFC0D6C|DMA5_PERIPHERAL_MAP|DMA Peripheral Map Registers|6-66
+0xFFC0D70|DMA5_CURR_X_COUNT|DMA Current Inner Loop Count Registers|6-76
+0xFFC0D78|DMA5_CURR_Y_COUNT|DMA Current Outer Loop Count Registers|6-79
+0xFFC0D80|DMA6_NEXT_DESC_PTR|DMA Next Descriptor Pointer Registers|6-81
+0xFFC0D84|DMA6_START_ADDR|DMA Start Address Registers|6-74
+0xFFC0D88|DMA6_CONFIG|DMA Configuration Registers|6-67
+0xFFC0D90|DMA6_X_COUNT|DMA Inner Loop Count Registers|6-75
+0xFFC0D94|DMA6_X_MODIFY|DMA Inner Loop Address Increment Registers|6-77
+0xFFC0D98|DMA6_Y_COUNT|DMA Outer Loop Count Registers|6-78
+0xFFC0D9C|DMA6_Y_MODIFY|DMA Outer Loop Address Increment Registers|6-80
+0xFFC0DA0|DMA6_CURR_DESC_PTR|DMA Current Descriptor Pointer Registers|6-82
+0xFFC0DA4|DMA6_CURR_ADDR|DMA Current Address Registers|6-75
+0xFFC0DA8|DMA6_IRQ_STATUS|DMA Interrupt Status Registers|6-72
+0xFFC0DAC|DMA6_PERIPHERAL_MAP|DMA Peripheral Map Registers|6-66
+0xFFC0DB0|DMA6_CURR_X_COUNT|DMA Current Inner Loop Count Registers|6-76
+0xFFC0DB8|DMA6_CURR_Y_COUNT|DMA Current Outer Loop Count Registers|6-79
+0xFFC0DC0|DMA7_NEXT_DESC_PTR|DMA Next Descriptor Pointer Registers|6-81
+0xFFC0DC4|DMA7_START_ADDR|DMA Start Address Registers|6-74
+0xFFC0DC8|DMA7_CONFIG|DMA Configuration Registers|6-67
+0xFFC0DD0|DMA7_X_COUNT|DMA Inner Loop Count Registers|6-75
+0xFFC0DD4|DMA7_X_MODIFY|DMA Inner Loop Address Increment Registers|6-77
+0xFFC0DD8|DMA7_Y_COUNT|DMA Outer Loop Count Registers|6-78
+0xFFC0DDC|DMA7_Y_MODIFY|DMA Outer Loop Address Increment Registers|6-80
+0xFFC0DE0|DMA7_CURR_DESC_PTR|DMA Current Descriptor Pointer Registers|6-82
+0xFFC0DE4|DMA7_CURR_ADDR|DMA Current Address Registers|6-75
+0xFFC0DE8|DMA7_IRQ_STATUS|DMA Interrupt Status Registers|6-72
+0xFFC0DEC|DMA7_PERIPHERAL_MAP|DMA Peripheral Map Registers|6-66
+0xFFC0DF0|DMA7_CURR_X_COUNT|DMA Current Inner Loop Count Registers|6-76
+0xFFC0DF8|DMA7_CURR_Y_COUNT|DMA Current Outer Loop Count Registers|6-79
+0xFFC0E00|DMA8_NEXT_DESC_PTR|DMA Next Descriptor Pointer Registers|6-81
+0xFFC0E04|DMA8_START_ADDR|DMA Start Address Registers|6-74
+0xFFC0E08|DMA8_CONFIG|DMA Configuration Registers|6-67
+0xFFC0E10|DMA8_X_COUNT|DMA Inner Loop Count Registers|6-75
+0xFFC0E14|DMA8_X_MODIFY|DMA Inner Loop Address Increment Registers|6-77
+0xFFC0E18|DMA8_Y_COUNT|DMA Outer Loop Count Registers|6-78
+0xFFC0E1C|DMA8_Y_MODIFY|DMA Outer Loop Address Increment Registers|6-80
+0xFFC0E20|DMA8_CURR_DESC_PTR|DMA Current Descriptor Pointer Registers|6-82
+0xFFC0E24|DMA8_CURR_ADDR|DMA Current Address Registers|6-75
+0xFFC0E28|DMA8_IRQ_STATUS|DMA Interrupt Status Registers|6-72
+0xFFC0E2C|DMA8_PERIPHERAL_MAP|DMA Peripheral Map Registers|6-66
+0xFFC0E30|DMA8_CURR_X_COUNT|DMA Current Inner Loop Count Registers|6-76
+0xFFC0E38|DMA8_CURR_Y_COUNT|DMA Current Outer Loop Count Registers|6-79
+0xFFC0E40|DMA9_NEXT_DESC_PTR|DMA Next Descriptor Pointer Registers|6-81
+0xFFC0E44|DMA9_START_ADDR|DMA Start Address Registers|6-74
+0xFFC0E48|DMA9_CONFIG|DMA Configuration Registers|6-67
+0xFFC0E50|DMA9_X_COUNT|DMA Inner Loop Count Registers|6-75
+0xFFC0E54|DMA9_X_MODIFY|DMA Inner Loop Address Increment Registers|6-77
+0xFFC0E58|DMA9_Y_COUNT|DMA Outer Loop Count Registers|6-78
+0xFFC0E5C|DMA9_Y_MODIFY|DMA Outer Loop Address Increment Registers|6-80
+0xFFC0E60|DMA9_CURR_DESC_PTR|DMA Current Descriptor Pointer Registers|6-82
+0xFFC0E64|DMA9_CURR_ADDR|DMA Current Address Registers|6-75
+0xFFC0E68|DMA9_IRQ_STATUS|DMA Interrupt Status Registers|6-72
+0xFFC0E6C|DMA9_PERIPHERAL_MAP|DMA Peripheral Map Registers|6-66
+0xFFC0E70|DMA9_CURR_X_COUNT|DMA Current Inner Loop Count Registers|6-76
+0xFFC0E78|DMA9_CURR_Y_COUNT|DMA Current Outer Loop Count Registers|6-79
+0xFFC0E80|DMA10_NEXT_DESC_PTR|DMA Next Descriptor Pointer Registers|6-81
+0xFFC0E84|DMA10_START_ADDR|DMA Start Address Registers|6-74
+0xFFC0E88|DMA10_CONFIG|DMA Configuration Registers|6-67
+0xFFC0E90|DMA10_X_COUNT|DMA Inner Loop Count Registers|6-75
+0xFFC0E94|DMA10_X_MODIFY|DMA Inner Loop Address Increment Registers|6-77
+0xFFC0E98|DMA10_Y_COUNT|DMA Outer Loop Count Registers|6-78
+0xFFC0E9C|DMA10_Y_MODIFY|DMA Outer Loop Address Increment Registers|6-80
+0xFFC0EA0|DMA10_CURR_DESC_PTR|DMA Current Descriptor Pointer Registers|6-82
+0xFFC0EA4|DMA10_CURR_ADDR|DMA Current Address Registers|6-75
+0xFFC0EA8|DMA10_IRQ_STATUS|DMA Interrupt Status Registers|6-72
+0xFFC0EAC|DMA10_PERIPHERAL_MAP|DMA Peripheral Map Registers|6-66
+0xFFC0EB0|DMA10_CURR_X_COUNT|DMA Current Inner Loop Count Registers|6-76
+0xFFC0EB8|DMA10_CURR_Y_COUNT|DMA Current Outer Loop Count Registers|6-79
+0xFFC0EC0|DMA11_NEXT_DESC_PTR|DMA Next Descriptor Pointer Registers|6-81
+0xFFC0EC4|DMA11_START_ADDR|DMA Start Address Registers|6-74
+0xFFC0EC8|DMA11_CONFIG|DMA Configuration Registers|6-67
+0xFFC0ED0|DMA11_X_COUNT|DMA Inner Loop Count Registers|6-75
+0xFFC0ED4|DMA11_X_MODIFY|DMA Inner Loop Address Increment Registers|6-77
+0xFFC0ED8|DMA11_Y_COUNT|DMA Outer Loop Count Registers|6-78
+0xFFC0EDC|DMA11_Y_MODIFY|DMA Outer Loop Address Increment Registers|6-80
+0xFFC0EE0|DMA11_CURR_DESC_PTR|DMA Current Descriptor Pointer Registers|6-82
+0xFFC0EE4|DMA11_CURR_ADDR|DMA Current Address Registers|6-75
+0xFFC0EE8|DMA11_IRQ_STATUS|DMA Interrupt Status Registers|6-72
+0xFFC0EEC|DMA11_PERIPHERAL_MAP|DMA Peripheral Map Registers|6-66
+0xFFC0EF0|DMA11_CURR_X_COUNT|DMA Current Inner Loop Count Registers|6-76
+0xFFC0EF8|DMA11_CURR_Y_COUNT|DMA Current Outer Loop Count Registers|6-79
+0xFFC00F00|MDMA_D0_NEXT_DESC_PTR|DMA Next Descriptor Pointer Registers|6-81
+0xFFC00F04|MDMA_D0_START_ADDR|DMA Start Address Registers|6-74
+0xFFC00F08|MDMA_D0_CONFIG|DMA Configuration Registers|6-67
+0xFFC00F10|MDMA_D0_X_COUNT|DMA Inner Loop Count Registers|6-75
+0xFFC00F14|MDMA_D0_X_MODIFY|DMA Inner Loop Address Increment Registers|6-77
+0xFFC00F18|MDMA_D0_Y_COUNT|DMA Outer Loop Count Registers|6-78
+0xFFC00F1C|MDMA_D0_Y_MODIFY|DMA Outer Loop Address Increment Registers|6-80
+0xFFC00F20|MDMA_D0_CURR_DESC_PTR|DMA Current Descriptor Pointer Registers|6-82
+0xFFC00F24|MDMA_D0_CURR_ADDR|DMA Current Address Registers|6-75
+0xFFC00F28|MDMA_D0_IRQ_STATUS|DMA Interrupt Status Registers|6-72
+0xFFC00F2C|MDMA_D0_PERIPHERAL_MAP|DMA Peripheral Map Registers|6-66
+0xFFC00F30|MDMA_D0_CURR_X_COUNT|DMA Current Inner Loop Count Registers|6-76
+0xFFC00F38|MDMA_D0_CURR_Y_COUNT|DMA Current Outer Loop Count Registers|6-79
+0xFFC00F40|MDMA_S0_NEXT_DESC_PTR|DMA Next Descriptor Pointer Registers|6-81
+0xFFC00F44|MDMA_S0_START_ADDR|DMA Start Address Registers|6-74
+0xFFC00F48|MDMA_S0_CONFIG|DMA Configuration Registers|6-67
+0xFFC00F50|MDMA_S0_X_COUNT|DMA Inner Loop Count Registers|6-75
+0xFFC00F54|MDMA_S0_X_MODIFY|DMA Inner Loop Address Increment Registers|6-77
+0xFFC00F58|MDMA_S0_Y_COUNT|DMA Outer Loop Count Registers|6-78
+0xFFC00F5C|MDMA_S0_Y_MODIFY|DMA Outer Loop Address Increment Registers|6-80
+0xFFC00F60|MDMA_S0_CURR_DESC_PTR|DMA Current Descriptor Pointer Registers|6-82
+0xFFC00F64|MDMA_S0_CURR_ADDR|DMA Current Address Registers|6-75
+0xFFC00F68|MDMA_S0_IRQ_STATUS|DMA Interrupt Status Registers|6-72
+0xFFC00F6C|MDMA_S0_PERIPHERAL_MAP|DMA Peripheral Map Registers|6-66
+0xFFC00F70|MDMA_S0_CURR_X_COUNT|DMA Current Inner Loop Count Registers|6-76
+0xFFC00F78|MDMA_S0_CURR_Y_COUNT|DMA Current Outer Loop Count Registers|6-79
+0xFFC00F80|MDMA_D1_NEXT_DESC_PTR|DMA Next Descriptor Pointer Registers|6-81
+0xFFC00F84|MDMA_D1_START_ADDR|DMA Start Address Registers|6-74
+0xFFC00F88|MDMA_D1_CONFIG|DMA Configuration Registers|6-67
+0xFFC00F90|MDMA_D1_X_COUNT|DMA Inner Loop Count Registers|6-75
+0xFFC00F94|MDMA_D1_X_MODIFY|DMA Inner Loop Address Increment Registers|6-77
+0xFFC00F98|MDMA_D1_Y_COUNT|DMA Outer Loop Count Registers|6-78
+0xFFC00F9C|MDMA_D1_Y_MODIFY|DMA Outer Loop Address Increment Registers|6-80
+0xFFC00FA0|MDMA_D1_CURR_DESC_PTR|DMA Current Descriptor Pointer Registers|6-82
+0xFFC00FA4|MDMA_D1_CURR_ADDR|DMA Current Address Registers|6-75
+0xFFC00FA8|MDMA_D1_IRQ_STATUS|DMA Interrupt Status Registers|6-72
+0xFFC00FAC|MDMA_D1_PERIPHERAL_MAP|DMA Peripheral Map Registers|6-66
+0xFFC00FB0|MDMA_D1_CURR_X_COUNT|DMA Current Inner Loop Count Registers|6-76
+0xFFC00FB8|MDMA_D1_CURR_Y_COUNT|DMA Current Outer Loop Count Registers|6-79
+0xFFC00FC0|MDMA_S1_NEXT_DESC_PTR|DMA Next Descriptor Pointer Registers|6-81
+0xFFC00FC4|MDMA_S1_START_ADDR|DMA Start Address Registers|6-74
+0xFFC00FC8|MDMA_S1_CONFIG|DMA Configuration Registers|6-67
+0xFFC00FD0|MDMA_S1_X_COUNT|DMA Inner Loop Count Registers|6-75
+0xFFC00FD4|MDMA_S1_X_MODIFY|DMA Inner Loop Address Increment Registers|6-77
+0xFFC00FD8|MDMA_S1_Y_COUNT|DMA Outer Loop Count Registers|6-78
+0xFFC00FDC|MDMA_S1_Y_MODIFY|DMA Outer Loop Address Increment Registers|6-80
+0xFFC00FE0|MDMA_S1_CURR_DESC_PTR|DMA Current Descriptor Pointer Registers|6-82
+0xFFC00FE4|MDMA_S1_CURR_ADDR|DMA Current Address Registers|6-75
+0xFFC00FE8|MDMA_S1_IRQ_STATUS|DMA Interrupt Status Registers|6-72
+0xFFC00FEC|MDMA_S1_PERIPHERAL_MAP|DMA Peripheral Map Registers|6-66
+0xFFC00FF0|MDMA_S1_CURR_X_COUNT|DMA Current Inner Loop Count Registers|6-76
+0xFFC00FF8|MDMA_S1_CURR_Y_COUNT|DMA Current Outer Loop Count Registers|6-79
