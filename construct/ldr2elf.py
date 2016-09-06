@@ -71,15 +71,30 @@ def get_decrypted(filename):
 def create_ldscript(ld_scriptname, entrypoint, sections):
     script = """OUTPUT_FORMAT("elf32-bfin", "elf32-bfin", "elf32-bfin")
 OUTPUT_ARCH(bfin)
-ENTRY(__start)
+
 
 ENTRY(.entrypoint)
 SECTIONS
 {{
     .entrypoint = 0x{:x} ;
+    .async_membank0           0x20000000 (NOLOAD) : {{ . = . + 0x10000; }}
+    .async_membank1           0x20100000 (NOLOAD) : {{ . = . + 0x10000; }}
+    .async_membank2           0x20200000 (NOLOAD) : {{ . = . + 0x10000; }}
+    .async_membank3           0x20300000 (NOLOAD) : {{ . = . + 0x10000; }}
+    .boot_rom                 0xef000000 (NOLOAD) : {{ . = . + 0x8000;  }}
+    .data_bank_a_sram         0xff800000 (NOLOAD) : {{ . = . + 0x4000;  }}
+    .data_bank_a_sram_cache   0xff804000 (NOLOAD) : {{ . = . + 0x4000;  }}
+    .data_bank_b_sram         0xff900000 (NOLOAD) : {{ . = . + 0x4000;  }}
+    .data_bank_b_sram_cache   0xff904000 (NOLOAD) : {{ . = . + 0x4000;  }}
+    .instruction_bank_a_sram  0xffa00000 (NOLOAD) : {{ . = . + 0x4000;  }}
+    .instruction_bank_b_sram  0xffa04000 (NOLOAD) : {{ . = . + 0x4000;  }}
+    .instruction_bank_c_sram  0xffa10000 (NOLOAD) : {{ . = . + 0x4000;  }}
+    .scratchpad_sram          0xffb00000 (NOLOAD) : {{ . = . + 0x1000;  }}
+    .mmr_system               0xffc00000 (NOLOAD) : {{ . = . + 0x20000;  }}
+    .mmr_core                 0xffe00000 (NOLOAD) : {{ . = . + 0x20000;  }}
     """.format(entrypoint)
     for vma, _ in sections:
-        script += ".text_{0:x} 0x{0:x} : {{ *(.text_{0:x}) }}".format(vma)
+        script += ".text_{0:x} 0x{0:x} : {{ *(.text_{0:x}) }}\n".format(vma)
 
     script += "}"
     with open(ld_scriptname, "w") as f:
