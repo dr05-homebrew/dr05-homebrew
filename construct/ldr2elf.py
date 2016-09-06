@@ -13,6 +13,7 @@ from structures import blockData
 from collections import namedtuple
 
 section = namedtuple("section", "vma data")
+mmap_entry = namedtuple("mmap_entry", "name start length")
 
 
 blockparser = GreedyRange(
@@ -68,7 +69,7 @@ def get_decrypted(filename):
     fwupdate = fwUpdateFile.parse(data)
     return fwupdate.decryptedBody
 
-def create_ldscript(ld_scriptname, entrypoint, sections):
+def create_ldscript(ld_scriptname, entrypoint, sections, memory_map):
     script = """OUTPUT_FORMAT("elf32-bfin", "elf32-bfin", "elf32-bfin")
 OUTPUT_ARCH(bfin)
 
@@ -76,23 +77,19 @@ OUTPUT_ARCH(bfin)
 ENTRY(.entrypoint)
 SECTIONS
 {{
-    .entrypoint = 0x{:x} ;
-    .async_membank0           0x20000000 (NOLOAD) : {{ . = . + 0x10000; }}
-    .async_membank1           0x20100000 (NOLOAD) : {{ . = . + 0x10000; }}
-    .async_membank2           0x20200000 (NOLOAD) : {{ . = . + 0x10000; }}
-    .async_membank3           0x20300000 (NOLOAD) : {{ . = . + 0x10000; }}
-    .boot_rom                 0xef000000 (NOLOAD) : {{ . = . + 0x8000;  }}
-    .data_bank_a_sram         0xff800000 (NOLOAD) : {{ . = . + 0x4000;  }}
-    .data_bank_a_sram_cache   0xff804000 (NOLOAD) : {{ . = . + 0x4000;  }}
-    .data_bank_b_sram         0xff900000 (NOLOAD) : {{ . = . + 0x4000;  }}
-    .data_bank_b_sram_cache   0xff904000 (NOLOAD) : {{ . = . + 0x4000;  }}
-    .instruction_bank_a_sram  0xffa00000 (NOLOAD) : {{ . = . + 0x4000;  }}
-    .instruction_bank_b_sram  0xffa04000 (NOLOAD) : {{ . = . + 0x4000;  }}
-    .instruction_bank_c_sram  0xffa10000 (NOLOAD) : {{ . = . + 0x4000;  }}
-    .scratchpad_sram          0xffb00000 (NOLOAD) : {{ . = . + 0x1000;  }}
-    .mmr_system               0xffc00000 (NOLOAD) : {{ . = . + 0x20000;  }}
-    .mmr_core                 0xffe00000 (NOLOAD) : {{ . = . + 0x20000;  }}
-    """.format(entrypoint)
+    .entrypoint = 0x{:x} ;""".format(entrypoint)
+
+    def overlaps(entry):
+        for vma, data in sections:
+            if entry.start <= vma <= entry.start + entry.length:
+                print("Omitting memory map entry '{}' @ 0x{:x}, as it overlaps with DXE section @ 0x{:x} (len {})".format(entry.name, entry.start, vma, len(data)))
+                return True
+        return False
+
+    for entry in memory_map:
+        if overlaps(entry):
+            continue
+        script += ".{0.name} 0x{0.start:x} (NOLOAD): {{ . = . + 0x{0.length:x}; }}\n".format(entry)
     for vma, _ in sections:
         script += ".text_{0:x} 0x{0:x} : {{ *(.text_{0:x}) }}\n".format(vma)
 
@@ -127,6 +124,23 @@ def obj_from_section(objfile, section):
         assert res.returncode == 0
 
 def create_elf(outfile, entrypoint, sections):
+    memory_map = [ # name, start, len
+        mmap_entry("async_membank0",          0x20000000, 0x10000),
+        mmap_entry("async_membank1",          0x20100000, 0x10000),
+        mmap_entry("async_membank2",          0x20200000, 0x10000),
+        mmap_entry("async_membank3",          0x20300000, 0x10000),
+        mmap_entry("boot_rom",                0xef000000, 0x8000),
+        mmap_entry("data_bank_a_sram",        0xff800000, 0x4000),
+        mmap_entry("data_bank_a_sram_cache",  0xff804000, 0x4000),
+        mmap_entry("data_bank_b_sram",        0xff900000, 0x4000),
+        mmap_entry("data_bank_b_sram_cache",  0xff904000, 0x4000),
+        mmap_entry("instruction_bank_a_sram", 0xffa00000, 0x4000),
+        mmap_entry("instruction_bank_b_sram", 0xffa04000, 0x4000),
+        mmap_entry("instruction_bank_c_sram", 0xffa10000, 0x4000),
+        mmap_entry("scratchpad_sram",         0xffb00000, 0x1000),
+        mmap_entry("mmr_system",              0xffc00000, 0x20000),
+        mmap_entry("mmr_core",                0xffe00000, 0x20000),
+    ]
     with tempfile.TemporaryDirectory() as temp_dir:
         objfiles = []
         for section in sections:
@@ -135,7 +149,7 @@ def create_elf(outfile, entrypoint, sections):
             obj_from_section(objfile, section)
 
         ld_scriptname = os.path.join(temp_dir, "link.ld")
-        create_ldscript(ld_scriptname, entrypoint, sections)
+        create_ldscript(ld_scriptname, entrypoint, sections, memory_map)
         link_objects(ld_scriptname, outfile, objfiles)
 
         res = subprocess.run( ["bfin-uclinux-strip", outfile])
