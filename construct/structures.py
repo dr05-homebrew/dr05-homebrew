@@ -61,8 +61,11 @@ blockHeader = Struct("blockHeader",
         ),
     ULInt32("TARGET ADDRESS"), # TODO: hex
     ULInt32("BYTE COUNT"),     # TODO: hex
-    ULInt32("ARGUMENT")        # TODO: hex
+    Union("ARGUMENT",
+        ULInt32("as_uint"),        # TODO: hex
+        Bytes("as_bytes", 4)
     )
+)
 
 # TODO: find untouched sections
 blockData = Struct("blockData",

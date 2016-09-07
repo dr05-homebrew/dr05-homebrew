@@ -32,7 +32,7 @@ def get_dxe(fw, dxe_num):
     for cur_dxe in range(dxe_num):
         header = blockHeader.parse(fw[offset:])
         assert header["BLOCK CODE"].BFLAG_FIRST
-        arg = header["ARGUMENT"]
+        arg = header["ARGUMENT"]["as_uint"]
         offset += arg
 
         header = blockHeader.parse(fw[offset:])
@@ -59,7 +59,10 @@ def get_sections(dxe):
             break
         vma = header["TARGET ADDRESS"]
 
-        data = body["data"]
+        if block_code["BFLAG_FILL"]:
+            data = (header["ARGUMENT"]["as_bytes"] * ((header["BYTE COUNT"] + 3) // 4))[:header["BYTE COUNT"]]
+        else:
+            data = body["data"]
         if data:
             yield section(vma, data)
 
