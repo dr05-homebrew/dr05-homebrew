@@ -66,6 +66,16 @@ def get_sections(dxe):
         if data:
             yield section(vma, data)
 
+def merge_sections(sections):
+    cur = sections[0]
+    for s in sections[1:]:
+        if s.vma == cur.vma + len(cur.data):
+            cur = section(cur.vma, cur.data + s.data)
+            continue
+        yield cur
+        cur = s
+    yield cur
+
 def get_decrypted(filename):
     with open(filename, "rb") as fp:
         data = fp.read()
@@ -171,6 +181,8 @@ def main(argv):
     data = get_decrypted(filename)
     entrypoint, dxe = get_dxe(data, dxe_num)
     sections = list(get_sections(dxe))
+    sections.sort()
+    sections = list(merge_sections(sections))
 
     create_elf(outfile, entrypoint, sections)
     return 0
