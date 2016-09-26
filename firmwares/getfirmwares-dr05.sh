@@ -7,4 +7,4 @@ wget -c 'http://tascam.com/content/downloads/products/558/dr-05_fw_v200.zip'
 wget -c 'http://tascam.com/content/downloads/products/558/dr-05_fw_v210.zip'
 wget -c 'http://tascam.com/content/downloads/products/558/dr-05_2.11.zip'
 
-sha256sum --check SHA256SUMS
+sha256sum --check --ignore-missing SHA256SUMS
