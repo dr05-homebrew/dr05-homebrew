@@ -34,7 +34,7 @@ when dealing with DR-05 firmware:
   [..cantor.dust..][cantor]
 * [QEMU] has been [ported to blackfin][qemu-bfin]
 * If you happen to have the [IDA Pro] SDK, you can use Andreas Schuler's
-  [blackfin plugin][ida-bfin]
+  [blackfin plugin][ida-bfin]. [Our fork][ida-dr05] is compatible with IDA 6.8.
 * [LdrViewer][ldrv] is a Windows program to view LDR bootstreams, the format
   that blackfin processors understand
 
@@ -46,4 +46,5 @@ when dealing with DR-05 firmware:
 [qemu-bfin]: https://github.com/vapier/qemu
 [IDA Pro]: https://www.hex-rays.com/products/ida/index.shtml
 [ida-bfin]: https://github.com/krater/Blackfin-IDA-Pro-Plugin
+[ida-dr05]: https://github.com/dr05-homebrew/Blackfin-IDA-Pro-Plugin
 [ldrv]: http://dolomitics.com/downloads/ldrviewer.html
